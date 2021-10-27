@@ -6,9 +6,7 @@ import UserDto from './dto/user-create.dto';
 
 @Injectable()
 export default class UserService {
-  constructor(
-    @InjectModel(UserModel) private userRepository: typeof UserModel,
-  ) {}
+  constructor(@InjectModel(UserModel) private userRepository: typeof UserModel) {}
 
   async getUserById(id: number) {
     return await this.userRepository.findByPk(id, {
@@ -16,9 +14,9 @@ export default class UserService {
     });
   }
 
-  async getUsers(search: string) {
+  async getUsers(search = '') {
     return await this.userRepository.findAll({
-      where: { username: { [Op.like]: search } },
+      where: { username: { [Op.substring]: search } },
       attributes: { exclude: ['password'] },
     });
   }
