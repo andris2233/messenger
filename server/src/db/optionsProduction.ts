@@ -10,3 +10,4 @@ export const options: SequelizeModuleOptions = {
   models: [],
   autoLoadModels: true,
 };
+// test
