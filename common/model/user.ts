@@ -1,14 +1,14 @@
 export interface IUserCreate {
   email: string;
   password: string;
-  nickname: string;
+  username: string;
 }
 
 export interface IUser {
   id: number;
 
   email: string;
-  nickname: string;
+  username: string;
 
   firstName: string;
   lastName: string;

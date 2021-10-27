@@ -2,6 +2,7 @@ import { Op } from 'sequelize';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable } from '@nestjs/common';
 import UserModel from './user.model';
+import UserDto from './dto/user-create.dto';
 
 @Injectable()
 export default class UserService {
@@ -17,8 +18,18 @@ export default class UserService {
 
   async getUsers(search: string) {
     return await this.userRepository.findAll({
-      where: { nickname: { [Op.like]: search } },
+      where: { username: { [Op.like]: search } },
       attributes: { exclude: ['password'] },
     });
+  }
+
+  async getUserByEmail(email: string) {
+    return await this.userRepository.findOne({
+      where: { email },
+    });
+  }
+
+  async createUser(userDto: UserDto) {
+    return await this.userRepository.create(userDto);
   }
 }

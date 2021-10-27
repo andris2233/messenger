@@ -18,7 +18,7 @@ export default class UserModel extends Model<UserModel, IUserCreate> {
   password: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  nickname: string;
+  username: string;
 
   @Column({ type: DataType.STRING })
   firstName: string;
