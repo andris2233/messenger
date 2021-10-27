@@ -35,5 +35,5 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # db
-/src/db/*
-!/src/db/index.ts
+/src/db/optionsProduction.ts
+/src/db/optionsDevelopment.ts
