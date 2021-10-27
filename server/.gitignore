@@ -33,3 +33,7 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# db
+!/src/db/optionsDevelopment.ts
+!/src/db/optionsProduction.ts
