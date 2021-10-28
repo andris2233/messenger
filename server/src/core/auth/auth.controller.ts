@@ -16,4 +16,9 @@ export default class AuthController {
   registration(@Body() userDto: UserDto) {
     return this.authService.registration(userDto);
   }
+
+  @Post('/refresh')
+  refresh(@Body() { refresh }: { refresh: string }) {
+    return this.authService.refresh(refresh);
+  }
 }
