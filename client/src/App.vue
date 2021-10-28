@@ -1,6 +1,5 @@
 <template>
-  <div id="app">
-  </div>
+  <div></div>
 </template>
 
 <script lang="ts">
@@ -14,4 +13,8 @@ export default class App extends Vue {}
 </script>
 
 <style lang="scss">
+* {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+}
 </style>
