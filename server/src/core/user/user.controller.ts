@@ -16,6 +16,6 @@ export default class UserController {
 
   @Get('/')
   getUsers(@Query() query) {
-    return this.userService.getUsers(query.search);
+    return this.userService.getUsers(query);
   }
 }
