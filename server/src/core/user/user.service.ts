@@ -5,6 +5,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import UserModel from './user.model';
 import UserDto from './dto/user-create.dto';
 import { IUsersQuery } from '@@/common/model/user';
+import { isEmail, isUsername } from '@@/common/utils/validation/validators';
 
 @Injectable()
 export default class UserService {
@@ -38,7 +39,37 @@ export default class UserService {
     });
   }
 
+  async getUserByUsername(username: string) {
+    return await this.userRepository.findOne({
+      where: { username },
+    });
+  }
+
   async createUser(userDto: UserDto) {
-    return await this.userRepository.create(userDto);
+    if (await this.validateUserToCreate(userDto)) {
+      return await this.userRepository.create(userDto);
+    } else {
+      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  private checkEmail(email: string | undefined) {
+    if (!email) throw new HttpException('Missed required param "email"', HttpStatus.BAD_REQUEST);
+    if (!isEmail(email)) throw new HttpException('Invalid email', HttpStatus.BAD_REQUEST);
+  }
+
+  async validateEmail(email: string | undefined) {
+    this.checkEmail(email);
+
+    const user = await this.getUserByEmail(email);
+    return !user;
+  }
+
+  async validateUsername(username: string) {
+    return isUsername(username) && !(await this.getUserByUsername(username));
+  }
+
+  private async validateUserToCreate(userDto: UserDto): Promise<boolean> {
+    return (await this.validateEmail(userDto.email) && (await this.validateUsername(userDto.username)));
   }
 }
