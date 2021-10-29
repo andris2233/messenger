@@ -7,10 +7,7 @@ import UserController from './user.controller';
 import AuthModule from '../auth/auth.module';
 
 @Module({
-  imports: [
-    SequelizeModule.forFeature([UserModel]),
-    forwardRef(() => AuthModule),
-  ],
+  imports: [forwardRef(() => AuthModule), SequelizeModule.forFeature([UserModel])],
   providers: [UserService],
   controllers: [UserController],
   exports: [UserService],

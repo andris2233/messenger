@@ -1,4 +1,4 @@
-import { Get, Param, Query, UseGuards } from '@nestjs/common';
+import { Get, Patch, Headers, Param, Query, UseGuards, Body } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 
@@ -28,5 +28,11 @@ export default class UserController {
   @Get('/validate/username')
   getIsValidUsername(@Query() query) {
     return this.userService.validateUsername(query.username);
+  }
+
+  @Patch('/')
+  @UseGuards(AuthGuard)
+  patchUser(@Headers() { authorization: accessToken }, @Body() body) {
+    return this.userService.updateUser(accessToken, body);
   }
 }
