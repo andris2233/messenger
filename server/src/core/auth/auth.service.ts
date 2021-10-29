@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { DecodeOptions } from 'jsonwebtoken';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 import UserDto from '../user/dto/user-create.dto';
@@ -7,23 +8,16 @@ import UserService from '../user/user.service';
 import UserModel from '../user/user.model';
 import { TOKEN_KEYS } from './auth-token.util';
 
-@Injectable({})
+@Injectable()
 export default class AuthService {
-  constructor(
-    private userService: UserService,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private userService: UserService, private jwtService: JwtService) {}
 
   async login(userDto: UserDto) {
     const user = await this.userService.getUserByEmail(userDto.email);
 
-    if (user && (await bcrypt.compare(userDto.password, user.password)))
-      return this.generateToken(user);
+    if (user && (await bcrypt.compare(userDto.password, user.password))) return this.generateToken(user);
 
-    throw new HttpException(
-      'Incorrect email or password',
-      HttpStatus.BAD_REQUEST,
-    );
+    throw new HttpException('Incorrect email or password', HttpStatus.BAD_REQUEST);
   }
 
   async registration(userDto: UserDto) {
@@ -36,10 +30,9 @@ export default class AuthService {
   }
 
   async refresh(refresh: string | null) {
-    const validToken = await this.jwtService.verifyAsync(refresh)
-      .catch(() => {
-        throw new HttpException('Invalid refresh token', HttpStatus.BAD_REQUEST);
-      });
+    const validToken = await this.jwtService.verifyAsync(refresh).catch(() => {
+      throw new HttpException('Invalid refresh token', HttpStatus.BAD_REQUEST);
+    });
 
     if (validToken.SCOPE !== TOKEN_KEYS.REFRESH) throw new HttpException('Invalid refresh token', HttpStatus.BAD_REQUEST);
 
@@ -55,9 +48,12 @@ export default class AuthService {
   }
 
   async verify(token: string | null): Promise<boolean> {
-    const parsed = await this.jwtService.verifyAsync(token)
-      .catch(() => ({}));
+    const parsed = await this.jwtService.verifyAsync(token).catch(() => ({}));
 
     return parsed.SCOPE === TOKEN_KEYS.ACCESS;
+  }
+
+  decode(token: string, options: DecodeOptions) {
+    return this.jwtService.decode(token, options);
   }
 }

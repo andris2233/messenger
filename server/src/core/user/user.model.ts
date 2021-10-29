@@ -14,11 +14,11 @@ export default class UserModel extends Model<UserModel, IUserCreate> {
   @Column({ type: DataType.STRING, unique: true })
   email: string;
 
-  @Column({ type: DataType.STRING, allowNull: false })
-  password: string;
+  @Column({ type: DataType.STRING, unique: true })
+  username: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  username: string;
+  password: string;
 
   @Column({ type: DataType.STRING })
   firstName: string;

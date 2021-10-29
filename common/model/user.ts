@@ -1,18 +1,24 @@
 export interface IUserCreate {
   email: string;
-  password: string;
   username: string;
+  password: string;
+}
+
+export type IUserPatch = {
+  email?: string;
+  username?: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+  idPrivate?: boolean;
 }
 
 export interface IUser {
   id: number;
-
   email: string;
   username: string;
-
   firstName: string;
   lastName: string;
-
   idPrivate: boolean;
 }
 
