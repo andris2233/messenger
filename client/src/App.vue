@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <router-view />
 </template>
 
 <script lang="ts">
@@ -13,8 +13,12 @@ export default class App extends Vue {}
 </script>
 
 <style lang="scss">
-* {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 400;
+#app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: #ccc;
 }
 </style>
