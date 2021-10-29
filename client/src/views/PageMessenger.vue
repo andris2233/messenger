@@ -25,7 +25,11 @@ import { Options, Vue } from 'vue-class-component';
   name: 'PageMessenger',
 })
 
-export default class PageMessenger extends Vue {}
+export default class PageMessenger extends Vue {
+  created() {
+    this.$api.test('Api plugin works!');
+  }
+}
 
 </script>
 

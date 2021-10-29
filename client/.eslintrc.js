@@ -23,6 +23,7 @@ module.exports = {
       consistent: true,
     }],
     'linebreak-style': 'off',
+    'no-param-reassign': 0,
     'spaced-comment': ['error', 'always', {
       markers: ['#region', '#endregion'],
     }]
