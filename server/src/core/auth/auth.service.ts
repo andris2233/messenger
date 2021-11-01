@@ -13,9 +13,13 @@ export default class AuthService {
   constructor(private userService: UserService, private jwtService: JwtService) {}
 
   async login(userDto: UserDto) {
-    const user = await this.userService.getUserByEmail(userDto.email);
-
-    if (user && (await bcrypt.compare(userDto.password, user.password))) return this.generateToken(user);
+    if (userDto.email) {
+      const user = await this.userService.getUserByEmail(userDto.email);
+      if (user && (await bcrypt.compare(userDto.password, user.password))) return this.generateToken(user);
+    } else if (userDto.username) {
+      const user = await this.userService.getUserByUsername(userDto.username);
+      if (user && (await bcrypt.compare(userDto.password, user.password))) return this.generateToken(user);
+    }
 
     throw new HttpException('Incorrect email or password', HttpStatus.BAD_REQUEST);
   }
