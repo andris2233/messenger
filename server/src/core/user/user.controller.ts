@@ -1,7 +1,7 @@
 import { Get, Patch, Headers, Param, Query, UseGuards, Body } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiPaginatedDto } from 'src/common/dto';
 
 import { PageDto, SearchDto, SizeDto } from 'src/common/dto';
