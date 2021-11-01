@@ -3,6 +3,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -14,6 +15,20 @@ async function bootstrap() {
     origin: ['http://localhost:8080'],
     credentials: true,
   });
-  await app.listen(3000);
+
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Messenger')
+    .setDescription('Документация API')
+    .setVersion('1.0.0')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'access-token',
+    )
+    .build();
+
+  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('/api/docs', app, swaggerDocument);
+
+  await app.listen(3000, '10.10.1.227', () => 'server has been started');
 }
 bootstrap();

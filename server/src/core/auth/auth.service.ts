@@ -30,7 +30,7 @@ export default class AuthService {
   }
 
   async refresh(refresh: string | null) {
-    const validToken = await this.jwtService.verifyAsync(refresh).catch(() => {
+    const validToken = await this.jwtService.verifyAsync(refresh.split('Bearer ')[1]).catch(() => {
       throw new HttpException('Invalid refresh token', HttpStatus.BAD_REQUEST);
     });
 
@@ -48,7 +48,7 @@ export default class AuthService {
   }
 
   async verify(token: string | null): Promise<boolean> {
-    const parsed = await this.jwtService.verifyAsync(token).catch(() => ({}));
+    const parsed = await this.jwtService.verifyAsync(token.split('Bearer ')[1]).catch(() => ({}));
 
     return parsed.SCOPE === TOKEN_KEYS.ACCESS;
   }

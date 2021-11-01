@@ -10,7 +10,7 @@ export type IUserPatch = {
   password?: string;
   firstName?: string;
   lastName?: string;
-  idPrivate?: boolean;
+  isPrivate?: boolean;
 }
 
 export interface IUser {
