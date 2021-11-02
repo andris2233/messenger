@@ -59,4 +59,15 @@ export class ContactService {
 
     return contactId;
   }
+
+  async removeContact(accessToken: string, contactId: number) {
+    if (isNaN(contactId)) {
+      throw new HttpException('Invalid user id', HttpStatus.BAD_REQUEST);
+    }
+
+    const ownerId = Number(parseJwt(accessToken).id);
+
+    await this.contactRepository.destroy({ where: { ownerId, contactId } });
+    return contactId;
+  }
 }
