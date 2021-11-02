@@ -1,5 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { UserModule } from '../user/user.module';
+import UserModule from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JWT_SECRET_KEY } from '../../config';
 

@@ -2,13 +2,13 @@ import { Body, Controller, Delete, Get, Headers, Param, Post, Query, UseGuards }
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiPaginatedDto, IdDto, PageDto, SearchDto, SizeDto } from 'src/common/dto';
 
-import { AuthGuard } from '../auth/auth.guard';
+import AuthGuard from '../auth/auth.guard';
 import { UserGetDto } from '../user/dto/user-get.dto';
-import { BlackListService } from './black-list.service';
+import BlackListService from './black-list.service';
 
 @Controller('/api/black-list')
 @ApiTags('Черный список')
-export class BlackListController {
+export default class BlackListController {
   constructor(private blackListService: BlackListService) {}
 
   @Get('/')

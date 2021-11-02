@@ -11,7 +11,7 @@ import { Op, WhereOptions } from 'sequelize';
 import sequelize from 'sequelize';
 
 @Injectable()
-export class ContactService {
+export default class ContactService {
   constructor(
     @InjectModel(ContactModel) private contactRepository: typeof ContactModel,
     @InjectModel(UserModel) private userRepository: typeof UserModel,

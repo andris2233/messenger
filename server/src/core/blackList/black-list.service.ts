@@ -11,7 +11,7 @@ import UserService from '../user/user.service';
 import { BlackListModel } from './black-list.model';
 
 @Injectable()
-export class BlackListService {
+export default class BlackListService {
   constructor(
     @InjectModel(BlackListModel) private blackListRepository: typeof BlackListModel,
     @InjectModel(UserModel) private userRepository: typeof UserModel,

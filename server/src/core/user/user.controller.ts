@@ -5,7 +5,7 @@ import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, 
 import { ApiPaginatedDto } from 'src/common/dto';
 
 import { PageDto, SearchDto, SizeDto } from 'src/common/dto';
-import { AuthGuard } from '../auth/auth.guard';
+import AuthGuard from '../auth/auth.guard';
 import { UserGetDto } from './dto/user-get.dto';
 import { UserPatchDto } from './dto/user-patch.dto';
 import UserService from './user.service';

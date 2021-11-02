@@ -12,4 +12,4 @@ import AuthModule from '../auth/auth.module';
   controllers: [UserController],
   exports: [UserService],
 })
-export class UserModule {}
+export default class UserModule {}

@@ -1,15 +1,15 @@
 import { Body, Controller, Delete, Get, Headers, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AuthGuard } from '../auth/auth.guard';
+import AuthGuard from '../auth/auth.guard';
 
 import { ApiPaginatedDto, IdDto, PageDto, SearchDto, SizeDto } from 'src/common/dto';
 import { UserGetDto } from '../user/dto/user-get.dto';
-import { ContactService } from './contact.service';
+import ContactService from './contact.service';
 
 @Controller('/api/contacts')
 @ApiTags('Контакты')
-export class ContactController {
+export default class ContactController {
   constructor(private contactService: ContactService) {}
 
   @Get('/')
