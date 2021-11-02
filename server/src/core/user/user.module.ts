@@ -4,6 +4,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import UserModel from './user.model';
 import UserService from './user.service';
 import UserController from './user.controller';
+
 import AuthModule from '../auth/auth.module';
 
 @Module({
@@ -12,4 +13,4 @@ import AuthModule from '../auth/auth.module';
   controllers: [UserController],
   exports: [UserService],
 })
-export class UserModule {}
+export default class UserModule {}

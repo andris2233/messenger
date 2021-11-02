@@ -5,6 +5,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 import UserModel from './user.model';
 import UserDto from './dto/user-create.dto';
+
 import { IUserPatch } from '@@/common/model/user';
 import { ISearchQuery } from '@@/common/model/common';
 import { isEmail, isUsername } from '@@/common/utils/validation/validators';

@@ -1,17 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import sequelize from 'sequelize';
+import { Op, WhereOptions } from 'sequelize';
 
-import UserService from '../user/user.service';
-import ContactModel from './contact.model';
 import { ISearchQuery } from '@@/common/model/common';
 
-import { parseJwt } from 'src/common/utils/jwt';
+import UserService from '../user/user.service';
 import UserModel from '../user/user.model';
-import { Op, WhereOptions } from 'sequelize';
-import sequelize from 'sequelize';
+
+import ContactModel from './contact.model';
+import { parseJwt } from 'src/common/utils/jwt';
 
 @Injectable()
-export class ContactService {
+export default class ContactService {
   constructor(
     @InjectModel(ContactModel) private contactRepository: typeof ContactModel,
     @InjectModel(UserModel) private userRepository: typeof UserModel,
@@ -50,6 +51,8 @@ export class ContactService {
     }
 
     const ownerId = Number(parseJwt(accessToken).id);
+    if (ownerId === contactId) throw new HttpException('You cannot add yourself into contacts', HttpStatus.BAD_REQUEST);
+
     const contact = await this.contactRepository.findOne({
       where: { ownerId, contactId },
     });
