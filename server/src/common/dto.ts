@@ -1,6 +1,5 @@
-import { applyDecorators, Type } from "@nestjs/common";
-import { ApiOkResponse, ApiProperty, getSchemaPath } from "@nestjs/swagger";
-
+import { applyDecorators, Type } from '@nestjs/common';
+import { ApiOkResponse, ApiProperty, getSchemaPath } from '@nestjs/swagger';
 
 export class PageDto {
   @ApiProperty({ default: 0, required: false })
@@ -17,9 +16,14 @@ export class SearchDto {
   search: string;
 }
 
+export class IdDto {
+  @ApiProperty({ default: 1, required: true })
+  id: number;
+}
+
 export class PaginationDto<ItemType> {
   @ApiProperty({ default: 1 })
-  count: Number;
+  count: number;
 
   @ApiProperty()
   rows: ItemType[];

@@ -22,12 +22,6 @@ export interface IUser {
   idPrivate: boolean;
 }
 
-export interface IUsersQuery {
-  search: string;
-  page?: string;
-  size: string;
-}
-
 export interface IUsersResponse {
   count: number;
   rows: IUser[];

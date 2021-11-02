@@ -5,9 +5,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 import UserModel from './user.model';
 import UserDto from './dto/user-create.dto';
-import { IUserPatch, IUsersQuery } from '@@/common/model/user';
+import { IUserPatch } from '@@/common/model/user';
+import { ISearchQuery } from '@@/common/model/common';
 import { isEmail, isUsername } from '@@/common/utils/validation/validators';
-import { Buffer } from 'buffer';
+import { parseJwt } from '../../common/utils/jwt';
 
 @Injectable()
 export default class UserService {
@@ -26,7 +27,7 @@ export default class UserService {
     return await this.userRepository.findByPk(id, { attributes: { exclude: ['password'] } });
   }
 
-  async getUsers({ search, page, size }: IUsersQuery) {
+  async getUsers({ search, page, size }: ISearchQuery) {
     if (size === undefined) throw new HttpException('Missed required param "size"', HttpStatus.BAD_REQUEST);
     if (isNaN(Number(size)) || size === '0') throw new HttpException('Incorrect required param "size"', HttpStatus.BAD_REQUEST);
 
@@ -52,7 +53,7 @@ export default class UserService {
   }
 
   async updateUser(accessToken: string, user: IUserPatch) {
-    const id = Number(JSON.parse(Buffer.from(accessToken.split('.')[1], 'base64').toString('ascii')).id);
+    const id = Number(parseJwt(accessToken).id);
 
     const foundUser = await this.userRepository.findByPk(Number(id), { attributes: { exclude: ['id'] } });
     if (!foundUser) throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
