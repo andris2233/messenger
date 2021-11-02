@@ -50,6 +50,8 @@ export class BlackListService {
     }
 
     const ownerId = Number(parseJwt(accessToken).id);
+    if (ownerId === blockedId) throw new HttpException('You cannot add yourself into black list', HttpStatus.BAD_REQUEST);
+
     const blocked = await this.blackListRepository.findOne({
       where: { ownerId, blockedId },
     });

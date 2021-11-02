@@ -50,6 +50,8 @@ export class ContactService {
     }
 
     const ownerId = Number(parseJwt(accessToken).id);
+    if (ownerId === contactId) throw new HttpException('You cannot add yourself into contacts', HttpStatus.BAD_REQUEST);
+
     const contact = await this.contactRepository.findOne({
       where: { ownerId, contactId },
     });
