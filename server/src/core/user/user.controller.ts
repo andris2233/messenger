@@ -1,14 +1,14 @@
 import { Get, Patch, Headers, Param, Query, UseGuards, Body } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
-
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ApiPaginatedDto } from 'src/common/dto';
 
-import { PageDto, SearchDto, SizeDto } from 'src/common/dto';
+import UserService from './user.service';
 import AuthGuard from '../auth/auth.guard';
+
+import { ApiPaginatedDto } from 'src/common/dto';
+import { PageDto, SearchDto, SizeDto } from 'src/common/dto';
 import { UserGetDto } from './dto/user-get.dto';
 import { UserPatchDto } from './dto/user-patch.dto';
-import UserService from './user.service';
 
 @Controller('/api/user')
 @ApiTags('Пользователь')

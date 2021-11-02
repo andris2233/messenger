@@ -1,5 +1,7 @@
 import { Table, Model, Column, DataType, HasMany } from 'sequelize-typescript';
+
 import { IUserCreate } from '@@/common/model/user';
+
 import ContactModel from '../contact/contact.model';
 import { BlackListModel } from '../blackList/black-list.model';
 

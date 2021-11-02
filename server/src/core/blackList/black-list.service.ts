@@ -1,14 +1,14 @@
-import { ISearchQuery } from '@@/common/model/common';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import sequelize from 'sequelize';
 import { Op } from 'sequelize';
 import { WhereOptions } from 'sequelize/types';
-import { parseJwt } from 'src/common/utils/jwt';
 
+import { parseJwt } from 'src/common/utils/jwt';
+import { BlackListModel } from './black-list.model';
 import UserModel from '../user/user.model';
 import UserService from '../user/user.service';
-import { BlackListModel } from './black-list.model';
+import { ISearchQuery } from '@@/common/model/common';
 
 @Injectable()
 export default class BlackListService {

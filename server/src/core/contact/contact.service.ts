@@ -1,14 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import sequelize from 'sequelize';
+import { Op, WhereOptions } from 'sequelize';
 
-import UserService from '../user/user.service';
-import ContactModel from './contact.model';
 import { ISearchQuery } from '@@/common/model/common';
 
-import { parseJwt } from 'src/common/utils/jwt';
+import UserService from '../user/user.service';
 import UserModel from '../user/user.model';
-import { Op, WhereOptions } from 'sequelize';
-import sequelize from 'sequelize';
+
+import ContactModel from './contact.model';
+import { parseJwt } from 'src/common/utils/jwt';
 
 @Injectable()
 export default class ContactService {

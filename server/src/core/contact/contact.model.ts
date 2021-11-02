@@ -1,6 +1,7 @@
-import { IContactCreate } from '@@/common/model/contact';
 import { Column, DataType, ForeignKey, Table, Model } from 'sequelize-typescript';
+
 import UserModel from '../user/user.model';
+import { IContactCreate } from '@@/common/model/contact';
 
 @Table({ tableName: 'contact', createdAt: false, updatedAt: false })
 export default class ContactModel extends Model<ContactModel, IContactCreate> {
