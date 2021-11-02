@@ -1,5 +1,6 @@
-import { Table, Model, Column, DataType } from 'sequelize-typescript';
+import { Table, Model, Column, DataType, HasMany } from 'sequelize-typescript';
 import { IUserCreate } from '@@/common/model/user';
+import ContactModel from '../contact/contact.model';
 
 @Table({ tableName: 'user', createdAt: false, updatedAt: false })
 export default class UserModel extends Model<UserModel, IUserCreate> {
@@ -28,4 +29,6 @@ export default class UserModel extends Model<UserModel, IUserCreate> {
 
   @Column({ type: DataType.BOOLEAN, defaultValue: false })
   isPrivate: boolean;
+  @HasMany(() => ContactModel, { foreignKey: 'ownerId' })
+  contacts: ContactModel[];
 }
