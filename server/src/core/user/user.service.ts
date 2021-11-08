@@ -28,6 +28,11 @@ export default class UserService {
     return await this.userRepository.findByPk(id, { attributes: { exclude: ['password'] } });
   }
 
+  getMe(accessToken: string) {
+    const id = Number(parseJwt(accessToken).id);
+    return this.getUserById(id);
+  }
+
   async getUsers({ search, page, size }: ISearchQuery) {
     if (size === undefined) throw new HttpException('Missed required param "size"', HttpStatus.BAD_REQUEST);
     if (isNaN(Number(size)) || size === '0') throw new HttpException('Incorrect required param "size"', HttpStatus.BAD_REQUEST);

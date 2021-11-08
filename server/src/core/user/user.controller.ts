@@ -15,6 +15,15 @@ import { UserPatchDto } from './dto/user-patch.dto';
 export default class UserController {
   constructor(private userService: UserService) {}
 
+  @Get('/me')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Получение данных ЛК' })
+  @ApiResponse({ status: 200, type: UserGetDto })
+  getMe(@Headers() { authorization }) {
+    return this.userService.getMe(authorization);
+  }
+
   @Get(':id')
   @UseGuards(AuthGuard)
   @ApiBearerAuth('access-token')
