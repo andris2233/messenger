@@ -3,13 +3,11 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { defineComponent } from 'vue';
 
-@Options({
+export default defineComponent({
   name: 'App',
-})
-
-export default class App extends Vue {}
+});
 </script>
 
 <style lang="scss">
@@ -19,6 +17,6 @@ export default class App extends Vue {}
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-color: #ccc;
+  background-color: $color-primary;
 }
 </style>

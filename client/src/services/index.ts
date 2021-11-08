@@ -1,5 +1,8 @@
+import instance from './instance';
+import auth from './auth.service';
+import user from './user.service';
+
 export default {
-  test(message: string): void {
-    console.log(message);
-  },
+  auth: auth(instance),
+  user: user(instance),
 };

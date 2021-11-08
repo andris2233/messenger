@@ -17,20 +17,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
 
-import { Options, Vue } from 'vue-class-component';
-
-@Options({
+export default defineComponent({
   name: 'PageMessenger',
-})
-
-export default class PageMessenger extends Vue {
-  created() {
-    this.$api.test('Api plugin works!');
-  }
-}
-
+});
 </script>
 
 <style scoped lang="scss">

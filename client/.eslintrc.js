@@ -6,7 +6,7 @@ module.exports = {
   extends: [
     'plugin:vue/vue3-essential',
     '@vue/airbnb',
-    '@vue/eslint-config-typescript',
+    '@vue/typescript/recommended',
   ],
   parserOptions: {
     ecmaVersion: 2020,
@@ -24,6 +24,8 @@ module.exports = {
     }],
     'linebreak-style': 'off',
     'no-param-reassign': 0,
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
     'spaced-comment': ['error', 'always', {
       markers: ['#region', '#endregion'],
     }]

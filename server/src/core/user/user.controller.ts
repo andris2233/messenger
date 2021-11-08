@@ -10,7 +10,7 @@ import { PageDto, SearchDto, SizeDto } from 'src/common/dto';
 import { UserGetDto } from './dto/user-get.dto';
 import { UserPatchDto } from './dto/user-patch.dto';
 
-@Controller('/api/user')
+@Controller('/api/index')
 @ApiTags('Пользователь')
 export default class UserController {
   constructor(private userService: UserService) {}
