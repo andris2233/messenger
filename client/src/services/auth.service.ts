@@ -1,28 +1,22 @@
-// eslint-disable-next-line import/extensions,import/no-unresolved
-import { IUserCreate } from '@@/model/user';
-import { AxiosInstance, AxiosResponse } from 'axios';
-import { isEmail, isUsername } from '@/helpers/validation/validators';
+import { AxiosResponse } from 'axios';
+import { IUserCreate, IUserSignIn } from 'common/model/user';
+import { isEmail, isUsername } from 'common/utils/validation/validators';
+import { request } from '@/services/http';
+import { IUserSignInForm } from '@/models/user';
 
-const BASE_URL = process.env.VUE_APP_API_ENDPOINT;
+export const authService = {
+  register: (userData: IUserCreate) => request()
+    .post('/auth/registration', userData)
+    .then((res: AxiosResponse) => res.data),
 
-const auth = (axios: AxiosInstance) => ({
-  registerUser(userData: IUserCreate) {
-    return axios
-      .post(`${BASE_URL}/auth/registration`, userData)
-      .then((response: AxiosResponse) => response.data);
+  signIn: (form: IUserSignInForm) => {
+    let userData: IUserSignIn | null = null;
+
+    if (isEmail(form.login)) userData = { email: form.login, password: form.password };
+    else if (isUsername(form.login)) userData = { username: form.login, password: form.password };
+
+    return request()
+      .post('/auth/login', userData)
+      .then((res: AxiosResponse) => res.data);
   },
-  signIn(login: string, password: string) {
-    const userData: { email?: string, username?: string, password: string } = {
-      password,
-    };
-
-    if (isEmail(login)) userData.email = login;
-    if (isUsername(login) && !isEmail(login)) userData.username = login;
-
-    return axios
-      .post(`${BASE_URL}/auth/login`, userData)
-      .then((response: AxiosResponse) => response.data);
-  },
-});
-
-export default auth;
+};

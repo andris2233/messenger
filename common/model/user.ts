@@ -1,3 +1,10 @@
+export type IUserSignIn = {
+  password: string;
+} & (
+  { email: string; username?: never }
+  | { email?: never; username: string }
+  );
+
 export interface IUserCreate {
   email: string;
   username: string;
@@ -20,6 +27,14 @@ export interface IUser {
   firstName: string;
   lastName: string;
   idPrivate: boolean;
+}
+
+export interface IAuthUserResponse {
+  id: number,
+  email: string,
+  username: string,
+  exp: number,
+  ait: number,
 }
 
 export interface IUsersResponse {

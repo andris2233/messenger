@@ -1,18 +1,12 @@
-import { AxiosInstance, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
+import { request } from '@/services/http';
 
-const BASE_URL = process.env.VUE_APP_API_ENDPOINT;
+export const userService = {
+  validateUsername: (username: string) => request()
+    .get('user/validate/username', { params: { username } })
+    .then((res: AxiosResponse) => res.data),
 
-const user = (axios: AxiosInstance) => ({
-  validateUsername(username: string) {
-    return axios
-      .get(`${BASE_URL}/user/validate/username`, { params: { username } })
-      .then((response: AxiosResponse) => response.data);
-  },
-  validateEmail(email: string) {
-    return axios
-      .get(`${BASE_URL}/user/validate/email`, { params: { email } })
-      .then((response: AxiosResponse) => response.data);
-  },
-});
-
-export default user;
+  validateEmail: (email: string) => request()
+    .get('user/validate/email', { params: { email } })
+    .then((res: AxiosResponse) => res.data),
+};

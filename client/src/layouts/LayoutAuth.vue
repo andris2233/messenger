@@ -2,14 +2,13 @@
   <RouterView />
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'App',
+  name: 'LayoutAuth',
 });
 </script>
 
-<style lang="scss">
-  @import "~@/assets/style/bootstrap.scss";
+<style scoped>
 </style>

@@ -1,24 +1,50 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import PageMessenger from '@/views/PageMessenger.vue';
-import PageAuth from '@/views/PageAuth.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'messenger',
-    component: PageMessenger,
-    meta: {
-      auth: true,
-      title: 'Мессенджер',
-    },
+    name: 'Main',
+    component: () => import(/* webpackChunkName: 'Main' */ '@/layouts/LayoutMain.vue'),
+    meta: { auth: true },
+    children: [
+      {
+        path: 'profile',
+        name: 'Profile',
+        // component: () => import(/* webpackChunkName: '' */ '@/components/views/'),
+      },
+      {
+        path: 'friends',
+        name: 'Friends',
+      },
+      {
+        path: 'messages',
+        name: 'Messages',
+      },
+    ] as RouteRecordRaw[],
   },
   {
-    path: '/login',
-    name: 'login',
-    component: PageAuth,
-    meta: {
-      title: 'Мессенджер | Авторизация',
-    },
+    path: '/auth',
+    name: 'Auth',
+    component: () => import(/* webpackChunkName: 'Auth' */ '@/layouts/LayoutAuth.vue'),
+    meta: { title: 'Messenger' },
+    children: [
+      {
+        path: 'sign-in',
+        name: 'SignIn',
+        component: () => import(
+          /* webpackChunkName: 'Auth' */
+          '@/components/views/auth/ViewAuthSignIn.vue'
+        ),
+      },
+      {
+        path: 'sign-up',
+        name: 'SignUp',
+        component: () => import(
+          /* webpackChunkName: 'Auth' */
+          '@/components/views/auth/ViewAuthSignUp.vue'
+        ),
+      },
+    ] as RouteRecordRaw[],
   },
 ];
 
