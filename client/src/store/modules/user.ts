@@ -22,7 +22,7 @@ export const user = {
       const tokens: {
         accessToken: string,
         refreshToken: string,
-      } = await authService.register(payload);
+      } = await authService.signUp(payload);
 
       commit('setTokens', tokens);
       commit('getAuthDataFromJwt', tokens.accessToken);

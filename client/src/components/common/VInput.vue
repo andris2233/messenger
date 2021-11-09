@@ -6,11 +6,11 @@
       </slot>
 
       <input
-        :value="modalValue"
+        :value="value"
         :type="type"
         :placeholder="placeholder"
         class="input"
-        @input="$emit('update:modalValue', $event.target.value)"
+        @input="$emit('update:value', $event.target.value)"
       >
     </label>
 
@@ -31,7 +31,7 @@ export default defineComponent({
   name: 'VInput',
 
   props: {
-    modalValue: { type: String, default: '' },
+    value: { type: String, default: '' },
     label: { type: String, default: '' },
 
     type: { type: String, default: 'text' },
@@ -40,7 +40,7 @@ export default defineComponent({
     errors: { type: Array, default: () => ([]) },
   },
 
-  emits: ['update:modalValue'],
+  emits: ['update:value'],
 });
 </script>
 

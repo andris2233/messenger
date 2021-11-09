@@ -1,17 +1,17 @@
 <template>
   <form class="form" @submit.prevent="onSubmit">
     <VInput
-      v-model="form.email"
+      v-model:value="form.email"
       label="Email"
     />
 
     <VInput
-      v-model="form.username"
+      v-model:value="form.username"
       label="Username"
     />
 
     <VInput
-      v-model="form.password"
+      v-model:value="form.password"
       label="Password"
       type="password"
     />
@@ -21,18 +21,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue';
+import { defineComponent, reactive } from 'vue';
 import { IUserCreate } from 'common/model/user';
+import store from '@/store/index';
 
 import VInput from '@/components/common/VInput.vue';
 import VButton from '@/components/common/VButton.vue';
 
 /*#region SingUp*/
 const setupSingUp = () => {
-  const form: Ref<IUserCreate> = ref<IUserCreate>({ email: '', username: '', password: '' });
+  const form = reactive<IUserCreate>({ email: '', username: '', password: '' });
 
   const onSubmit = () => {
-    console.log('SignUp submit');
+    store.dispatch('user/signUp', form);
   };
 
   return {

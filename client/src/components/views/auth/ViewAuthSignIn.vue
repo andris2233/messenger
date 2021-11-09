@@ -1,12 +1,12 @@
 <template>
   <form class="form" @submit.prevent="onSubmit">
     <VInput
-      v-model="form.login"
+      v-model:value="form.login"
       label="Email / Username"
     />
 
     <VInput
-      v-model="form.password"
+      v-model:value="form.password"
       label="Password"
       type="password"
     />
@@ -16,21 +16,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue';
-import { mapActions } from 'vuex';
+import { defineComponent, reactive } from 'vue';
 import { IUserSignInForm } from '@/models/user';
+import store from '@/store/index';
 
 import VInput from '@/components/common/VInput.vue';
 import VButton from '@/components/common/VButton.vue';
 
-const userActions = mapActions('user', ['signIn']);
-
 /*#region SingIn*/
 const setupSingIn = () => {
-  const form: Ref<IUserSignInForm> = ref<IUserSignInForm>({ login: '', password: '' });
+  const form = reactive<IUserSignInForm>({ login: '', password: '' });
 
   const onSubmit = () => {
-    userActions.signIn(form);
+    store.dispatch('user/signIn', form);
   };
 
   return {

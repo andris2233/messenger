@@ -5,9 +5,13 @@ import { request } from '@/services/http';
 import { IUserSignInForm } from '@/models/user';
 
 export const authService = {
-  register: (userData: IUserCreate) => request()
-    .post('/auth/registration', userData)
-    .then((res: AxiosResponse) => res.data),
+  signUp: (userData: IUserCreate) => {
+    if (!isEmail(userData.email) || !isUsername(userData.username)) return Promise.reject();
+
+    return request()
+      .post('/auth/registration', userData)
+      .then((res: AxiosResponse) => res.data);
+  },
 
   signIn: (form: IUserSignInForm) => {
     let userData: IUserSignIn | null = null;
