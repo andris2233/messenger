@@ -1,33 +1,74 @@
-import { INestApplicationContext } from '@nestjs/common';
+import { INestApplicationContext, WebSocketAdapter } from '@nestjs/common';
 import { IoAdapter } from '@nestjs/platform-socket.io';
-import { OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
+import { MessageMappingProperties } from '@nestjs/websockets';
+import { DISCONNECT_EVENT } from '@nestjs/websockets/constants';
+import { isFunction, isNil } from '@nestjs/common/utils/shared.utils';
 
-import { parseJwt } from 'src/common/utils/jwt';
+import { Server, Socket, ServerOptions } from 'socket.io';
+import { filter, first, fromEvent, mergeMap, Observable, share, map, takeUntil } from 'rxjs';
+
 import AuthService from 'src/core/auth/auth.service';
 import SocketService from './socket.service';
 
-export default class SocketAdapter extends IoAdapter implements OnGatewayConnection, OnGatewayDisconnect {
+export default class SocketAdapter extends IoAdapter implements WebSocketAdapter<Server, Socket, ServerOptions> {
   constructor(private readonly app: INestApplicationContext, private socketService: SocketService, private authService: AuthService) {
     super(app);
   }
 
-  async handleConnection(client: Socket) {
-    const token = client.handshake.headers.authorization;
+  private server: Server;
 
-    if (!token || !(await this.authService.verify(token))) {
-      client.disconnect();
-      return;
-    }
+  async bindClientConnect(server: Server, callback: (Socket) => any) {
+    server.on('connection', async (socket: Socket) => {
+      const token = socket.handshake.headers.authorization;
 
-    const user = this.authService.decode(token.split(' ')[1], {});
+      if (!token || !(await this.authService.verify(token))) {
+        socket.disconnect();
+        return;
+      }
 
-    if (user) this.socketService.add(Number((user as any).id), client);
-    return client;
+      const user = this.authService.decode(token.split(' ')[1], {});
+      const id: number | null = typeof user === 'object' ? Number(user.id) : null;
+
+      if (typeof id === 'number') this.socketService.add(Number((user as any).id), socket);
+
+      socket.on('disconnect', () => {
+        if (typeof id === 'number') this.socketService.remove(id, socket);
+      });
+
+      callback(socket);
+    });
   }
 
-  handleDisconnect(client: Socket) {
-    const parsed = parseJwt(client.handshake.headers.authorization.split(' ')[1]);
-    this.socketService.remove(Number(parsed.id), client);
+  public create(port: number, options: any = {}): any {
+    if ('namespace' in options) return this.server.of(options.namespace);
+    this.server = this.createIOServer(port, options);
+    return this.server;
+  }
+
+  close(server: Server) {
+    return Promise.resolve(server.close());
+  }
+
+  public bindMessageHandlers(client: any, handlers: MessageMappingProperties[], transform: (data: any) => Observable<any>) {
+    const disconnect$ = fromEvent(client, DISCONNECT_EVENT).pipe(share(), first());
+
+    handlers.forEach(({ message, callback }) => {
+      const source$ = fromEvent(client, message).pipe(
+        mergeMap((payload: any) => {
+          const { data, ack } = this.mapPayload(payload);
+          return transform(callback(data, ack)).pipe(
+            filter((response: any) => !isNil(response)),
+            map((response: any) => [response, ack]),
+          );
+        }),
+        takeUntil(disconnect$),
+      );
+      source$.subscribe(([response, ack]) => {
+        if (response.event) {
+          return client.emit(response.event, response.data);
+        }
+        isFunction(ack) && ack(response);
+      });
+    });
   }
 }
