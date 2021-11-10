@@ -52,8 +52,10 @@ export default class AuthService {
   }
 
   async verify(token: string | null): Promise<boolean> {
-    const parsed = await this.jwtService.verifyAsync(token.split('Bearer ')[1]).catch(() => ({}));
+    const splitted = token.split('Bearer ');
+    if (splitted.length < 2) return false;
 
+    const parsed = await this.jwtService.verifyAsync(splitted[1]).catch(() => ({}));
     return parsed.SCOPE === TOKEN_KEYS.ACCESS;
   }
 
