@@ -3,15 +3,17 @@
     <VInput
       v-model:value="form.login"
       label="Email / Username"
+      class="shadow"
     />
 
     <VInput
       v-model:value="form.password"
       label="Password"
       type="password"
+      class="shadow"
     />
 
-    <VButton class="mt-16" title="Sign in" />
+    <VButton class="shadow mt-16" title="Sign in" />
   </form>
 </template>
 
@@ -55,6 +57,6 @@ export default defineComponent({
 .form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
 }
 </style>

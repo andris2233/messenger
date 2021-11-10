@@ -57,14 +57,14 @@ export default defineComponent({
 
   .input {
     display: flex;
-    padding: 5px;
+    padding: 6px 10px;
     width: 100%;
     height: 36px;
     font-size: var(--font-size-h2);
     font-weight: var(--font-weight-regular);
     background: var(--color-lightest-gray);
-    border: 1px solid var(--color-primary);
-    border-radius: 2px;
+    border: none;
+    border-radius: 6px;
     transition: 0.3s all;
     outline: none;
 
@@ -80,5 +80,12 @@ export default defineComponent({
     font-size: var(--font-size-h4);
     color: var(--color-error);
   }
+}
+
+.wrapper.shadow .input {
+  box-shadow: var(--shadow-2);
+}
+.wrapper.label-white .label > span{
+  color: var(--color-white);
 }
 </style>

@@ -35,7 +35,7 @@ export default defineComponent({
   font-size: var(--font-size-h2);
   color: var(--color-white);
   border: none;
-  border-radius: 2px;
+  border-radius: 6px;
   background-color: var(--color-primary);
   cursor: pointer;
   transition: all 300ms;
@@ -43,8 +43,15 @@ export default defineComponent({
   &:disabled { opacity: 0.5; }
 
   &:not(:disabled) {
-    &:hover,
-    &:active { box-shadow: var(--shadow-focused) }
+    &:active { box-shadow: var(--shadow-focused); }
+  }
+}
+
+.button.shadow {
+  box-shadow: var(--shadow-2);
+
+  &:not(:disabled) {
+    &:active { box-shadow: var(--shadow-2), var(--shadow-focused); }
   }
 }
 </style>
