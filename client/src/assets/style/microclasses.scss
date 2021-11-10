@@ -1,6 +1,41 @@
 @each $i in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100 ) {
+  .m-#{$i} { margin: #{$i}px; }
+  .p-#{$i} { padding: #{$i}px; }
+
   @each $side-name, $side-symbol in (top: t, right: r, bottom: b, left: l) {
-    .m#{$side-symbol}-#{$i} { margin-#{$side-name}: #{$i}px };
-    .p#{$side-symbol}-#{$i} { padding-#{$side-name}: #{$i}px };
+    .m#{$side-symbol}-#{$i} { margin-#{$side-name}: #{$i}px; }
+    .p#{$side-symbol}-#{$i} { padding-#{$side-name}: #{$i}px; }
   }
+}
+
+@each $i in (0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100) {
+  .w-#{$i} { width: #{$i} + '%'; }
+  .h-#{$i} { height: #{$i} + '%'; }
+}
+
+.d-flex { display: flex; }
+
+.flex-row { flex-direction: row; }
+.flex-col { flex-direction: column; }
+
+.flex-row-reverse { flex-direction: row-reverse; }
+.flex-col-reverse { flex-direction: column-reverse; }
+
+@each $key, $value in (
+        center: center,
+        start: start,
+        end: end,
+        around: space-around,
+        between: space-between,
+        evenly: space-evenly,
+        stretch: stretch,
+) {
+  .justify-items-#{$key} { justify-content: #{$value}; }
+}
+
+.items-center { align-items: center; }
+.items-stretch { align-items: stretch; }
+
+@each $i in (1, 2, 3, 4, 5, 6, 7, 8) {
+  .flex-#{$i} { flex: #{$i}; }
 }

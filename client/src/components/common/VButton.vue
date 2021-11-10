@@ -7,7 +7,7 @@
     ]"
   >
     <slot>
-      <span>{{ title }}</span>
+      <span>{{ text }}</span>
     </slot>
   </button>
 </template>
@@ -19,7 +19,7 @@ export default defineComponent({
   name: 'VButton',
 
   props: {
-    title: { type: String, default: '' },
+    text: { type: String, default: '' },
     disabled: { type: Boolean, default: false },
   },
 });
@@ -37,21 +37,25 @@ export default defineComponent({
   border: none;
   border-radius: 6px;
   background-color: var(--color-primary);
+  outline: none;
   cursor: pointer;
   transition: all 300ms;
 
   &:disabled { opacity: 0.5; }
 
   &:not(:disabled) {
-    &:active { box-shadow: var(--shadow-focused); }
+    &:focus { box-shadow: var(--shadow-focused); }
+    &:active { box-shadow: var(--shadow-activated); }
   }
 }
 
+// this implementation is in question
 .button.shadow {
   box-shadow: var(--shadow-2);
 
   &:not(:disabled) {
-    &:active { box-shadow: var(--shadow-2), var(--shadow-focused); }
+    &:focus { box-shadow: var(--shadow-2), var(--shadow-focused); }
+    &:active { box-shadow: var(--shadow-2), var(--shadow-activated); }
   }
 }
 </style>

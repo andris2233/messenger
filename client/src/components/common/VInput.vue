@@ -14,6 +14,7 @@
       >
     </label>
 
+    <!-- todo redo so that errors do not change the height of the component -->
     <div class="errors">
       <template v-for="(error, errorI) in errors">
         <slot name="error" v-bind="{ error, errorI }">
@@ -82,6 +83,7 @@ export default defineComponent({
   }
 }
 
+// this implementation is in question
 .wrapper.shadow .input {
   box-shadow: var(--shadow-2);
 }

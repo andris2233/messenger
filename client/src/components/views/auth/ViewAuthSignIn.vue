@@ -13,7 +13,7 @@
       class="shadow"
     />
 
-    <VButton class="shadow mt-16" title="Sign in" />
+    <VButton class="shadow mt-32" text="Sign in" />
   </form>
 </template>
 
@@ -55,6 +55,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .form {
+  margin-top: 53px + 14px; // height of VInput with gap
   display: flex;
   flex-direction: column;
   gap: 14px;

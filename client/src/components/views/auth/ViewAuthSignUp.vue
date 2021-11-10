@@ -19,7 +19,7 @@
       class="shadow"
     />
 
-    <VButton title="Sign up" class="shadow mt-32" />
+    <VButton text="Sign up" class="shadow mt-32" />
   </form>
 </template>
 

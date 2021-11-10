@@ -6,7 +6,9 @@ import { IUserSignInForm } from '@/models/user';
 
 export const authService = {
   signUp: (userData: IUserCreate) => {
-    if (!isEmail(userData.email) || !isUsername(userData.username)) return Promise.reject();
+    if (!isEmail(userData.email) || !isUsername(userData.username)) {
+      return Promise.reject(new Error('Login is not validate as "Email" or "Username"'));
+    }
 
     return request()
       .post('/auth/registration', userData)
@@ -16,8 +18,15 @@ export const authService = {
   signIn: (form: IUserSignInForm) => {
     let userData: IUserSignIn | null = null;
 
-    if (isEmail(form.login)) userData = { email: form.login, password: form.password };
-    else if (isUsername(form.login)) userData = { username: form.login, password: form.password };
+    const _isEmail = isEmail(form.login);
+    const _isUsername = isUsername(form.login);
+
+    if (!_isEmail && !_isUsername) {
+      return Promise.reject(new Error('Login is not validate as "Email" or "Username"'));
+    }
+
+    if (_isEmail) userData = { email: form.login, password: form.password };
+    else if (_isUsername) userData = { username: form.login, password: form.password };
 
     return request()
       .post('/auth/login', userData)
