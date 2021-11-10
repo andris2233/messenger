@@ -7,8 +7,9 @@ import AuthModule from './core/auth/auth.module';
 import ContactModule from './core/contact/contact.module';
 import { BlackListModule } from './core/blackList/black-list.module';
 import FriendModule from './core/friend/friend.module';
+import SocketModule from './socket-adapter/socket.module';
 
 @Module({
-  imports: [SequelizeModule.forRoot(databaseConnectionOptions), UserModule, AuthModule, ContactModule, BlackListModule, FriendModule],
+  imports: [SequelizeModule.forRoot(databaseConnectionOptions), UserModule, AuthModule, ContactModule, BlackListModule, FriendModule, SocketModule],
 })
 export default class AppModule {}
