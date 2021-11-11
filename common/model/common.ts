@@ -3,3 +3,8 @@ export interface ISearchQuery {
   page?: string;
   size: string;
 }
+
+export interface ISocketMsg<T> {
+  accessToken: string;
+  msg: T;
+}

@@ -23,7 +23,7 @@ export default class SocketService {
     else this.socketState.set(userId, sockets);
   }
 
-  getByEventName(userId: number, nsp: string): Socket[] {
+  getByNamespace(userId: number, nsp: string): Socket[] {
     const existingSockets = this.socketState.get(userId) || [];
     return existingSockets.filter((socket: Socket) => socket.nsp.name === nsp);
   }

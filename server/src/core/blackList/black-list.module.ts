@@ -15,4 +15,4 @@ import { BlackListModel } from './black-list.model';
   controllers: [BlackListController],
   exports: [BlackListService],
 })
-export class BlackListModule {}
+export default class BlackListModule {}
