@@ -13,12 +13,12 @@
       class="shadow"
     />
 
-    <VButton class="shadow mt-32" text="Sign in" />
+    <VButton :disabled="!canLogin" class="shadow mt-32" text="Sign in" />
   </form>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { computed, defineComponent, reactive } from 'vue';
 import { IUserSignInForm } from '@/models/user';
 import store from '@/store/index';
 
@@ -29,12 +29,15 @@ import VButton from '@/components/common/VButton.vue';
 const setupSingIn = () => {
   const form = reactive<IUserSignInForm>({ login: '', password: '' });
 
+  const canLogin = computed(() => Object.values(form).every((field) => !!field));
+
   const onSubmit = () => {
     store.dispatch('user/signIn', form);
   };
 
   return {
     form,
+    canLogin,
     onSubmit,
   };
 };

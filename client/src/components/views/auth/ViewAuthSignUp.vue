@@ -1,15 +1,17 @@
 <template>
   <form class="form" @submit.prevent="onSubmit">
     <VInput
-      v-model:value="form.email"
+      :value="form.email"
       label="Email"
+      @input="checkValidation($event.target.value, 'email')"
       class="shadow"
     />
 
     <VInput
-      v-model:value="form.username"
+      :value="form.username"
       label="Username"
       class="shadow"
+      @input="checkValidation($event.target.value, 'username')"
     />
 
     <VInput
@@ -19,13 +21,16 @@
       class="shadow"
     />
 
-    <VButton text="Sign up" class="shadow mt-32" />
+    <VButton :disabled="!canRegister" text="Sign up" class="shadow mt-32" />
   </form>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, reactive, ref, computed } from 'vue';
 import { IUserCreate } from 'common/model/user';
+import debounce from 'lodash/debounce';
+import { isEmail, isUsername } from 'common/utils/validation/validators';
+import { userService } from '@/services/user.service';
 import store from '@/store/index';
 
 import VInput from '@/components/common/VInput.vue';
@@ -35,12 +40,26 @@ import VButton from '@/components/common/VButton.vue';
 const setupSingUp = () => {
   const form = reactive<IUserCreate>({ email: '', username: '', password: '' });
 
+  const isEmailValid = ref(true);
+  const isUsernameValid = ref(true);
+
+  const checkValidation = debounce(async (value: string, key: keyof IUserCreate) => {
+    form[key] = value;
+
+    if (key === 'email' && isEmail(value)) isEmailValid.value = await userService.validateEmail(value);
+    else if (key === 'username' && isUsername(value)) isUsernameValid.value = await userService.validateUsername(value);
+  }, 500);
+
+  const canRegister = computed(() => isEmailValid.value && isUsernameValid.value && Object.values(form).every((field) => !!field));
+
   const onSubmit = () => {
     store.dispatch('user/signUp', form);
   };
 
   return {
     form,
+    checkValidation,
+    canRegister,
     onSubmit,
   };
 };

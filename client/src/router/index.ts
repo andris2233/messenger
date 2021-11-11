@@ -5,7 +5,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     name: 'Main',
     component: () => import(/* webpackChunkName: 'Main' */ '@/layouts/LayoutMain.vue'),
-    meta: { auth: true },
+    meta: { title: 'Messenger', auth: true },
     children: [
       {
         path: 'profile',
@@ -35,6 +35,7 @@ const routes: Array<RouteRecordRaw> = [
           /* webpackChunkName: 'Auth' */
           '@/components/views/auth/ViewAuthSignIn.vue'
         ),
+        meta: { title: 'Login' },
       },
       {
         path: 'sign-up',
@@ -43,6 +44,7 @@ const routes: Array<RouteRecordRaw> = [
           /* webpackChunkName: 'Auth' */
           '@/components/views/auth/ViewAuthSignUp.vue'
         ),
+        meta: { title: 'Register' },
       },
     ] as RouteRecordRaw[],
   },

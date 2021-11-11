@@ -41,7 +41,10 @@ export default defineComponent({
   cursor: pointer;
   transition: all 300ms;
 
-  &:disabled { opacity: 0.5; }
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
 
   &:not(:disabled) {
     &:focus { box-shadow: var(--shadow-focused); }
