@@ -1,4 +1,4 @@
-import { FriendApproveMsg, FriendSendMsg } from '@@/common/model/friend';
+import { FriendApproveMsg, FriendRemoveMsg, FriendSendMsg } from '@@/common/model/friend';
 import { UseGuards } from '@nestjs/common';
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
@@ -11,6 +11,7 @@ const SOCKET_NAMESPACE = '/socket/friends';
 const SOCKET_EVENTS = {
   ADD_FRIEND: 'addFriend',
   APPROVE_FRIEND: 'approveFriend',
+  REMOVE_FRIEND: 'removeFriend',
 };
 
 @WebSocketGateway(5000, {
@@ -38,5 +39,11 @@ export default class FriendGateway {
   @UseGuards(WsGuard)
   approveFriend(@MessageBody() data: FriendApproveMsg) {
     this.friendService.approveFriend(SOCKET_NAMESPACE, data, SOCKET_EVENTS.APPROVE_FRIEND);
+  }
+
+  @SubscribeMessage(SOCKET_EVENTS.REMOVE_FRIEND)
+  @UseGuards(WsGuard)
+  removeFriend(@MessageBody() data: FriendRemoveMsg) {
+    this.friendService.removeFriend(SOCKET_NAMESPACE, data, SOCKET_EVENTS.REMOVE_FRIEND);
   }
 }

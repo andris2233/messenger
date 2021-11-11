@@ -27,4 +27,9 @@ export default class SocketService {
     const existingSockets = this.socketState.get(userId) || [];
     return existingSockets.filter((socket: Socket) => socket.nsp.name === nsp);
   }
+
+  sendMessage(userId: number, nsp: string, eventName: string, msg: any) {
+    const addressat = this.getByNamespace(userId, nsp);
+    addressat.forEach((socket: Socket) => socket.emit(eventName, msg));
+  }
 }
