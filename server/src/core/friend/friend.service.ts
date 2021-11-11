@@ -10,7 +10,7 @@ import UserService from '../user/user.service';
 import BlackListService from '../blackList/black-list.service';
 
 import FriendModel from './friend.model';
-import { FriendMsgSend } from '@@/common/model/friend';
+import { FriendApproveMsg, FriendSendMsg } from '@@/common/model/friend';
 
 @Injectable()
 export default class FriendService {
@@ -23,7 +23,7 @@ export default class FriendService {
   ) {}
 
   /*#region Used in gateway*/
-  async addFriend(namespace: string, data: FriendMsgSend, eventName: string) {
+  async addFriend(namespace: string, data: FriendSendMsg, eventName: string) {
     const sender = this.getSender(data.accessToken);
     if (typeof sender === 'string') return;
 
@@ -42,6 +42,22 @@ export default class FriendService {
 
     const addressat = this.socketService.getByNamespace(Number(data.msg.toId), namespace);
     addressat.forEach((socket: Socket) => socket.emit(eventName, { fromId }));
+  }
+
+  async approveFriend(namespace: string, data: FriendApproveMsg, eventName: string) {
+    const sender = this.getSender(data.accessToken);
+
+    if (typeof sender === 'string') return;
+
+    const toId = Number(sender.id);
+    const fromId = Number(data.msg.fromId);
+    if (isNaN(fromId)) throw new WsException('This operation blocked by incorrect user');
+
+    const result = await this.friendRepository.update({ approved: true }, { where: { fromId, toId } });
+    if (result[0] === 0) throw new WsException('This operation blocked by not created friendship');
+
+    const addressat = this.socketService.getByNamespace(fromId, namespace);
+    addressat.forEach((socket: Socket) => socket.emit(eventName, { toId }));
   }
   /*#endregion Used in gateway*/
 
