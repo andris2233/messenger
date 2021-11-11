@@ -53,7 +53,7 @@ export default defineComponent({
 }
 
 // this implementation is in question
-.button.shadow {
+.button.button_shadow {
   box-shadow: var(--shadow-2);
 
   &:not(:disabled) {

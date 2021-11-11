@@ -3,17 +3,17 @@
     <VInput
       v-model:value="form.login"
       label="Email / Username"
-      class="shadow"
+      class="input_shadow"
     />
 
     <VInput
       v-model:value="form.password"
       label="Password"
       type="password"
-      class="shadow"
+      class="input_shadow"
     />
 
-    <VButton :disabled="!canLogin" class="shadow mt-32" text="Sign in" />
+    <VButton :disabled="!canLogin" class="button_shadow mt-32" text="Sign in" />
   </form>
 </template>
 

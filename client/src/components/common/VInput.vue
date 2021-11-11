@@ -1,6 +1,6 @@
 <template>
-  <div class="wrapper">
-    <label class="label">
+  <div class="input">
+    <label class="input__label">
       <slot name="label">
         <span>{{ label }}</span>
       </slot>
@@ -9,15 +9,15 @@
         :value="value"
         :type="type"
         :placeholder="placeholder"
-        class="input"
+        class="input__text-field"
         @input="$emit('update:value', $event.target.value)"
       >
     </label>
 
     <!-- todo redo so that errors do not change the height of the component -->
-    <div class="errors">
+    <div class="input__errors">
       <template v-for="(error, errorI) in errors">
-        <slot name="error" v-bind="{ error, errorI }">
+        <slot name="input__error" v-bind="{ error, errorI }">
           <span :key="errorI" class="error">{{ error.message }}</span>
         </slot>
       </template>
@@ -46,17 +46,17 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.wrapper {
+.input {
   display: flex;
   flex-direction: column;
 
-  .label > span{
+  .input__label > span{
     display: flex;
     font-size: var(--font-size-h3);
     font-weight: var(--font-weight-regular);
   }
 
-  .input {
+  .input__text-field {
     display: flex;
     padding: 6px 10px;
     width: 100%;
@@ -74,7 +74,7 @@ export default defineComponent({
     }
   }
 
-  .errors > .error {
+  .input__errors .input__error {
     display: flex;
     margin-top: 6px;
     height: 16px;
@@ -84,10 +84,10 @@ export default defineComponent({
 }
 
 // this implementation is in question
-.wrapper.shadow .input {
+.input.input_shadow .input__text-field {
   box-shadow: var(--shadow-2);
 }
-.wrapper.label-white .label > span{
+.input.input_white .input__label span{
   color: var(--color-white);
 }
 </style>

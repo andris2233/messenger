@@ -4,13 +4,13 @@
       :value="form.email"
       label="Email"
       @input="checkValidation($event.target.value, 'email')"
-      class="shadow"
+      class="input_shadow"
     />
 
     <VInput
       :value="form.username"
       label="Username"
-      class="shadow"
+      class="input_shadow"
       @input="checkValidation($event.target.value, 'username')"
     />
 
@@ -18,10 +18,10 @@
       v-model:value="form.password"
       label="Password"
       type="password"
-      class="shadow"
+      class="input_shadow"
     />
 
-    <VButton :disabled="!canRegister" text="Sign up" class="shadow mt-32" />
+    <VButton :disabled="!canRegister" text="Sign up" class="button_shadow mt-32" />
   </form>
 </template>
 

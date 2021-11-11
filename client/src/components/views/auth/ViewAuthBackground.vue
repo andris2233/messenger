@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { defineComponent, defineExpose, onMounted, ref, reactive } from 'vue';
+import { defineComponent, onMounted, ref, reactive } from 'vue';
 
 const setupResizeObserver = () => {
   const r = {
@@ -60,7 +60,6 @@ const setupResizeObserver = () => {
       },
     ]),
   };
-  defineExpose({ wrapper: r.wrapper });
 
   onMounted(() => {
     r.resizeObserver = new ResizeObserver((ev) => {
