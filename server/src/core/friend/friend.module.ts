@@ -11,9 +11,11 @@ import FriendService from './friend.service';
 import FriendGateway from './friend.gateway';
 import SocketModule from 'src/socket-adapter/socket.module';
 import BlackListModule from '../blackList/black-list.module';
+import FriendController from './friend.controller';
 
 @Module({
   imports: [SequelizeModule.forFeature([FriendModel, UserModel]), UserModule, AuthModule, SocketModule, BlackListModule],
+  controllers: [FriendController],
   providers: [FriendService, FriendGateway],
   exports: [FriendService],
 })

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { WsException } from '@nestjs/websockets';
-import { Op } from 'sequelize';
+import { Op, WhereOptions } from 'sequelize';
 
 import SocketService from 'src/socket-adapter/socket.service';
 import AuthService from '../auth/auth.service';
@@ -11,11 +11,14 @@ import BlackListService from '../blackList/black-list.service';
 import FriendModel from './friend.model';
 import { FriendApproveMsg, FriendRemoveMsg, FriendSendMsg } from '@@/common/model/friend';
 import { getErrorMessage } from 'src/common/utils/socket';
+import UserModel from '../user/user.model';
+import sequelize from 'sequelize';
 
 @Injectable()
 export default class FriendService {
   constructor(
     @InjectModel(FriendModel) private friendRepository: typeof FriendModel,
+    @InjectModel(UserModel) private userRepository: typeof UserModel,
     private blackListService: BlackListService,
     private userService: UserService,
     private socketService: SocketService,
@@ -74,6 +77,42 @@ export default class FriendService {
     this.socketService.sendMessage(removeId, namespace, eventName, { friendId: senderId });
   }
   /*#endregion Used in gateway*/
+
+  /*#region Used in controller*/
+  async getFriends(accessToken: string, query: any) {
+    const user = this.getSender(accessToken);
+    if (typeof user === 'string') return;
+
+    const where: WhereOptions<UserModel> = {
+      id: {
+        [Op.in]: sequelize.literal(`
+            (
+              SELECT "fromId" as "userId"
+              FROM "friend"
+              WHERE
+                "approved" = true AND
+                "fromId" = ${user.id}
+              UNION
+              SELECT "toId" as "userId"
+              FROM "friend"
+              WHERE
+                "approved" = true AND
+                "toId" = ${user.id}
+            )
+          `),
+      },
+    };
+
+    if (query.search) where.username = { [Op.substring]: query.search };
+
+    return await this.userRepository.findAndCountAll({
+      where,
+      attributes: { exclude: ['password'] },
+      offset: (Number(query.page) || 0) * Number(query.size),
+      limit: Number(query.size),
+    });
+  }
+  /*#endregion Used in controller*/
 
   private async checkBlackList(fromId: number, toId: number) {
     return await this.blackListService.checkUserInBlackList(toId, fromId);
