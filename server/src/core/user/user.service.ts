@@ -71,6 +71,7 @@ export default class UserService {
 
     const users = await this.userRepository.findAndCountAll({
       where,
+      order: [['id', 'ASC']],
       attributes: { exclude: ['password', 'email'] },
       offset: (Number(page) || 0) * Number(size),
       limit: Number(size),
