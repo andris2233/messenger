@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import store from '@/store/index';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -10,15 +11,20 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'profile',
         name: 'Profile',
-        // component: () => import(/* webpackChunkName: '' */ '@/components/views/'),
+        component: () => import(/* webpackChunkName: '' */ '@/components/views/profile/ViewProfile.vue'),
+        meta: { title: 'Profile', auth: true },
       },
       {
         path: 'friends',
         name: 'Friends',
+        // component: () => import(/* webpackChunkName: '' */ '@/components/views/profile/ViewProfile.vue'),
+        meta: { title: 'Friends', auth: true },
       },
       {
         path: 'messages',
         name: 'Messages',
+        // component: () => import(/* webpackChunkName: '' */ '@/components/views/profile/ViewProfile.vue'),
+        meta: { title: 'Messages', auth: true },
       },
     ] as RouteRecordRaw[],
   },
@@ -58,7 +64,10 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title as string;
 
-  next();
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (to.meta.auth && !store.state.user.tokens.accessToken) next({ name: 'SignIn' });
+  else next();
 });
 
 export default router;

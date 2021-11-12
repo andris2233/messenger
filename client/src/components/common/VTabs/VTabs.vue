@@ -97,6 +97,7 @@ export default defineComponent({
 
   ul.tabs-list {
     display: flex;
+    justify-content: center;
     margin: 0;
     padding: 0;
     height: 100%;

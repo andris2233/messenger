@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios';
+import store from '@/store/index';
 import { request } from '@/services/http';
 
 export const userService = {
@@ -8,5 +9,11 @@ export const userService = {
 
   validateEmail: (email: string) => request()
     .get('user/validate/email', { params: { email } })
+    .then((res: AxiosResponse) => res.data),
+
+  getProfileData: () => request()
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    .get('user/me', { headers: { Authorization: `Bearer ${store.state.user.tokens.accessToken}` } })
     .then((res: AxiosResponse) => res.data),
 };
