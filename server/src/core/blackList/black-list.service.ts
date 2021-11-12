@@ -72,4 +72,16 @@ export default class BlackListService {
     await this.blackListRepository.destroy({ where: { ownerId, blockedId } });
     return blockedId;
   }
+
+  async checkUserInBlackList(ownerId: number, blockedId): Promise<boolean> {
+    const blackListRow = await this.blackListRepository.findOne({
+      where: {
+        [Op.or]: [
+          { ownerId, blockedId },
+          { ownerId: blockedId, blockedId: ownerId },
+        ],
+      },
+    });
+    return !!blackListRow;
+  }
 }

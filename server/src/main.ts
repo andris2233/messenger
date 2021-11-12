@@ -2,9 +2,13 @@ import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import AppModule from './app.module';
+import { initAdapters } from './socket-adapter/socket.init-adapter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
+
+  initAdapters(app);
+
   app.enableCors({
     origin: ['http://localhost:8080'],
     credentials: true,
@@ -20,6 +24,7 @@ async function bootstrap() {
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('/api/docs', app, swaggerDocument);
 
-  await app.listen(3000, '10.10.1.227', () => 'server has been started');
+  await app.listen(3000, '10.10.1.227');
 }
+
 bootstrap();
