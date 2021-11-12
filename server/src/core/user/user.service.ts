@@ -44,7 +44,6 @@ export default class UserService {
 
     if (size === undefined) throw new HttpException('Missed required param "size"', HttpStatus.BAD_REQUEST);
     if (isNaN(Number(size)) || size === '0') throw new HttpException('Incorrect required param "size"', HttpStatus.BAD_REQUEST);
-    console.log(user.id);
 
     const where: WhereOptions<UserModel> = {
       id: {
