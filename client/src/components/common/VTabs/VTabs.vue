@@ -56,7 +56,7 @@ const setupTabs = (props: TabsProps, context: SetupContext) => {
     };
   });
 
-  const onElemClick = (item: any) => context.emit('update:current', item);
+  const onElemClick = (item: TabsItem) => context.emit('update:current', item);
 
   return {
     elems,
