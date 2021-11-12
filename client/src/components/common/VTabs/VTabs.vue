@@ -30,11 +30,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue';
+import { defineComponent, ref, computed, onMounted, PropType, SetupContext } from 'vue';
+import { TabsItem, TabsProps } from '@/components/common/VTabs/types';
 
 const isMounted = ref(false);
 
-const setupTabs = (props, context) => {
+const setupTabs = (props: TabsProps, context: SetupContext) => {
   const elems = ref([]);
 
   const underline = computed(() => {
@@ -46,7 +47,7 @@ const setupTabs = (props, context) => {
     const currentI = items.findIndex((item: any) => props.matchingFunction(current, item));
 
     if (currentI === -1) return emptyResult;
-    const el = elems.value[currentI];
+    const el: HTMLElement = elems.value[currentI];
 
     return {
       show: true,
@@ -55,7 +56,7 @@ const setupTabs = (props, context) => {
     };
   });
 
-  const onElemClick = (item) => context.emit('update:current', item);
+  const onElemClick = (item: TabsItem) => context.emit('update:current', item);
 
   return {
     elems,
@@ -68,16 +69,16 @@ export default defineComponent({
   name: 'VTabs',
 
   props: {
-    current: { type: Object, default: null },
-    items: { type: Array, default: () => ([]) },
+    current: { type: Object as PropType<TabsItem>, default: null },
+    items: { type: Array as PropType<TabsItem[]>, default: () => ([]) },
 
     matchingFunction: {
-      type: Function,
-      default: (current: any, item: any) => current === item,
+      type: Function as PropType<(current: TabsItem, item: TabsItem) => boolean>,
+      default: (current: TabsItem, item: TabsItem) => current === item,
     },
   },
 
-  setup(props, context) {
+  setup(props: TabsProps, context: SetupContext) {
     onMounted(() => { isMounted.value = true; });
 
     return {
