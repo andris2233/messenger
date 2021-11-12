@@ -12,7 +12,7 @@ import { JWT_SECRET_KEY } from '../../config';
     forwardRef(() => UserModule),
     JwtModule.register({
       secret: JWT_SECRET_KEY,
-      signOptions: { expiresIn: '15m' },
+      signOptions: { expiresIn: '15h' },
     }),
   ],
   providers: [AuthService],
