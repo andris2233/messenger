@@ -16,11 +16,35 @@ export default class FriendController {
   @UseGuards(AuthGuard)
   @ApiBearerAuth('access-token')
   @ApiPaginatedDto(UserGetDto)
-  @ApiOperation({ summary: 'Получение контактов' })
+  @ApiOperation({ summary: 'Получение друзей' })
   @ApiQuery({ name: 'search', type: SearchDto })
   @ApiQuery({ name: 'size', type: SizeDto })
   @ApiQuery({ name: 'page', type: PageDto })
-  getContacts(@Headers() { authorization: accessToken }, @Query() query) {
+  getFriends(@Headers() { authorization: accessToken }, @Query() query) {
     return this.friendService.getFriends(accessToken, query);
+  }
+
+  @Get('/incoming')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('access-token')
+  @ApiPaginatedDto(UserGetDto)
+  @ApiOperation({ summary: 'Получение входящих заявок' })
+  @ApiQuery({ name: 'search', type: SearchDto })
+  @ApiQuery({ name: 'size', type: SizeDto })
+  @ApiQuery({ name: 'page', type: PageDto })
+  getIncoming(@Headers() { authorization: accessToken }, @Query() query) {
+    return this.friendService.getIncoming(accessToken, query);
+  }
+
+  @Get('/outgoing')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('access-token')
+  @ApiPaginatedDto(UserGetDto)
+  @ApiOperation({ summary: 'Получение исходящих заявок' })
+  @ApiQuery({ name: 'search', type: SearchDto })
+  @ApiQuery({ name: 'size', type: SizeDto })
+  @ApiQuery({ name: 'page', type: PageDto })
+  getOutgoing(@Headers() { authorization: accessToken }, @Query() query) {
+    return this.friendService.getOutgoing(accessToken, query);
   }
 }
