@@ -59,9 +59,9 @@ module.exports = class IconPreparationPlugin {
     const iconDataUnions = dirs
       .map((dir) => ({
         path: dir,
-        iconObject: fs.readFileSync(
+        iconObject: xml2js(fs.readFileSync(
           path.join(this.inputPath, dir), { encoding: 'utf-8' },
-        ),
+        )),
       }));
 
     iconDataUnions.forEach((iconDataUnion) => {
