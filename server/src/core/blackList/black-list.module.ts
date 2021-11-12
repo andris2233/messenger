@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 
 import AuthModule from '../auth/auth.module';
@@ -10,7 +10,7 @@ import BlackListService from './black-list.service';
 import { BlackListModel } from './black-list.model';
 
 @Module({
-  imports: [SequelizeModule.forFeature([BlackListModel, UserModel]), UserModule, AuthModule],
+  imports: [SequelizeModule.forFeature([BlackListModel, UserModel]), forwardRef(() => UserModule), forwardRef(() => AuthModule)],
   providers: [BlackListService],
   controllers: [BlackListController],
   exports: [BlackListService],

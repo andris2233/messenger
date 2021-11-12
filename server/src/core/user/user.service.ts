@@ -10,10 +10,14 @@ import { IUserPatch } from '@@/common/model/user';
 import { ISearchQuery } from '@@/common/model/common';
 import { isEmail, isUsername } from '@@/common/utils/validation/validators';
 import { parseJwt } from '../../common/utils/jwt';
+import sequelize from 'sequelize';
 
 @Injectable()
 export default class UserService {
-  constructor(@InjectModel(UserModel) private userRepository: typeof UserModel) {}
+  constructor(
+    @InjectModel(UserModel)
+    private userRepository: typeof UserModel,
+  ) {}
 
   /*#region Used in controllers*/
   async getUserByEmail(email: string) {
@@ -25,28 +29,54 @@ export default class UserService {
   }
 
   async getUserById(id: number) {
+    const user = await this.userRepository.findByPk(id, { attributes: { exclude: ['password', 'email'] } });
+    return this.wrapPrivateUser(user);
+  }
+
+  async getMe(accessToken: string) {
+    const id = Number(parseJwt(accessToken).id);
     return await this.userRepository.findByPk(id, { attributes: { exclude: ['password'] } });
   }
 
-  getMe(accessToken: string) {
-    const id = Number(parseJwt(accessToken).id);
-    return this.getUserById(id);
-  }
+  async getUsers({ search, page, size }: ISearchQuery, accessToken: string) {
+    const user = parseJwt(accessToken);
+    if (typeof user === 'string') return;
 
-  async getUsers({ search, page, size }: ISearchQuery) {
     if (size === undefined) throw new HttpException('Missed required param "size"', HttpStatus.BAD_REQUEST);
     if (isNaN(Number(size)) || size === '0') throw new HttpException('Incorrect required param "size"', HttpStatus.BAD_REQUEST);
+    console.log(user.id);
 
-    const where: WhereOptions<UserModel> = {};
+    const where: WhereOptions<UserModel> = {
+      id: {
+        [Op.not]: Number(user.id),
+        [Op.notIn]: sequelize.literal(`
+          (
+            SELECT "toId" as "userId"
+            FROM "friend"
+            WHERE
+              "approved" = true AND
+              "fromId" = ${user.id}
+            UNION
+            SELECT "fromId" as "userId"
+            FROM "friend"
+            WHERE
+              "approved" = true AND
+              "toId" = ${user.id}
+          )
+        `),
+      },
+    };
 
     if (search) where.username = { [Op.substring]: search };
 
-    return await this.userRepository.findAndCountAll({
+    const users = await this.userRepository.findAndCountAll({
       where,
-      attributes: { exclude: ['password'] },
+      attributes: { exclude: ['password', 'email'] },
       offset: (Number(page) || 0) * Number(size),
       limit: Number(size),
     });
+
+    return { ...users, rows: this.mapPrivateUsers(users.rows) };
   }
 
   async validateEmail(email: string | undefined) {
@@ -100,5 +130,19 @@ export default class UserService {
   private static checkEmail(email: string | undefined) {
     if (!email) throw new HttpException('Missed required param "email"', HttpStatus.BAD_REQUEST);
     if (!isEmail(email)) throw new HttpException('Invalid email', HttpStatus.BAD_REQUEST);
+  }
+
+  private mapPrivateUsers(users: UserModel[]) {
+    return users.map((user) => {
+      return this.wrapPrivateUser(user);
+    });
+  }
+
+  private wrapPrivateUser(user: UserModel) {
+    if (!user.isPrivate) return user;
+
+    user.firstName = null;
+    user.lastName = null;
+    return user;
   }
 }

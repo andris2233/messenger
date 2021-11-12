@@ -10,7 +10,7 @@ import { PageDto, SearchDto, SizeDto } from 'src/common/dto';
 import { UserGetDto } from './dto/user-get.dto';
 import { UserPatchDto } from './dto/user-patch.dto';
 
-@Controller('/api/index')
+@Controller('/api/user')
 @ApiTags('Пользователь')
 export default class UserController {
   constructor(private userService: UserService) {}
@@ -42,8 +42,8 @@ export default class UserController {
   @ApiQuery({ name: 'search', type: SearchDto })
   @ApiQuery({ name: 'size', type: SizeDto })
   @ApiQuery({ name: 'page', type: PageDto })
-  getUsers(@Query() query) {
-    return this.userService.getUsers(query);
+  getUsers(@Query() query, @Headers() { authorization }) {
+    return this.userService.getUsers(query, authorization);
   }
 
   @Get('/validate/email')
