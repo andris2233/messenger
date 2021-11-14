@@ -3,7 +3,13 @@
 
   <div class="centralize">
     <div class="w-100 d-flex justify-items-center">
-      <div class="beta-logo"></div>
+      <VIcon
+        path="logo/normal"
+        with-fill
+        width="160"
+        height="160"
+        class="logo"
+      />
     </div>
 
     <RouterView />
@@ -12,12 +18,13 @@
 
 <script>
 import { defineComponent } from 'vue';
+import VIcon from '@/components/common/VIcon.vue';
 import ViewAuthBackground from '@/components/views/auth/ViewAuthBackground.vue';
 
 export default defineComponent({
   name: 'LayoutAuth',
 
-  components: { ViewAuthBackground },
+  components: { VIcon, ViewAuthBackground },
 });
 </script>
 
@@ -33,15 +40,10 @@ export default defineComponent({
 
   transition: width 300ms;
 
-  .beta-logo {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background: var(--color-white);
-    box-shadow: var(--shadow-1);
-
-    transition: opacity 200ms;
-    pointer-events: none;
+  .logo {
+    fill: var(--color-white);
+    color: var(--color-primary);
+    filter: drop-shadow(#{var(--shadow-1)});
   }
 }
 

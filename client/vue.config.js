@@ -4,7 +4,7 @@ const IconPreparationPlugin = require('./webpack/plugins/IconPreparationPlugin')
 module.exports = {
   configureWebpack: {
     plugins: [
-      new IconPreparationPlugin(),
+      new IconPreparationPlugin('src/assets/icons', 'icons'),
     ],
   },
 };
