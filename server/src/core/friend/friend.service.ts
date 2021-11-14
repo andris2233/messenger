@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { WsException } from '@nestjs/websockets';
 import { Op, WhereOptions } from 'sequelize';
@@ -20,6 +20,7 @@ export default class FriendService {
     @InjectModel(FriendModel) private friendRepository: typeof FriendModel,
     @InjectModel(UserModel) private userRepository: typeof UserModel,
     private blackListService: BlackListService,
+    @Inject(forwardRef(() => UserService))
     private userService: UserService,
     private socketService: SocketService,
     private authService: AuthService,

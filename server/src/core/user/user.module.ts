@@ -6,9 +6,10 @@ import UserService from './user.service';
 import UserController from './user.controller';
 
 import AuthModule from '../auth/auth.module';
+import FriendModule from '../friend/friend.module';
 
 @Module({
-  imports: [forwardRef(() => AuthModule), SequelizeModule.forFeature([UserModel])],
+  imports: [forwardRef(() => AuthModule), forwardRef(() => FriendModule), SequelizeModule.forFeature([UserModel])],
   providers: [UserService],
   controllers: [UserController],
   exports: [UserService],

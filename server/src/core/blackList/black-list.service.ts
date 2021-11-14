@@ -1,5 +1,5 @@
 import { InjectModel } from '@nestjs/sequelize';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import sequelize from 'sequelize';
 import { Op } from 'sequelize';
 import { WhereOptions } from 'sequelize/types';
@@ -15,6 +15,7 @@ export default class BlackListService {
   constructor(
     @InjectModel(BlackListModel) private blackListRepository: typeof BlackListModel,
     @InjectModel(UserModel) private userRepository: typeof UserModel,
+    @Inject(forwardRef(() => UserService))
     private userService: UserService,
   ) {}
 
