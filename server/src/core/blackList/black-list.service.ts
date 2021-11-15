@@ -9,12 +9,14 @@ import { BlackListModel } from './black-list.model';
 import UserModel from '../user/user.model';
 import UserService from '../user/user.service';
 import { ISearchQuery } from '@@/common/model/common';
+import FriendModel from '../friend/friend.model';
 
 @Injectable()
 export default class BlackListService {
   constructor(
     @InjectModel(BlackListModel) private blackListRepository: typeof BlackListModel,
     @InjectModel(UserModel) private userRepository: typeof UserModel,
+    @InjectModel(FriendModel) private friendRepository: typeof FriendModel,
     @Inject(forwardRef(() => UserService))
     private userService: UserService,
   ) {}
@@ -59,6 +61,16 @@ export default class BlackListService {
 
     if (blocked) throw new HttpException('This user has already been added into black list', HttpStatus.BAD_REQUEST);
     await this.blackListRepository.create({ ownerId, blockedId });
+
+    const friendship = await this.friendRepository.findOne({
+      where: {
+        [Op.or]: [
+          { fromId: blockedId, toId: ownerId },
+          { fromId: ownerId, toId: blockedId },
+        ],
+      },
+    });
+    if (friendship) friendship.destroy();
 
     return blockedId;
   }
