@@ -38,7 +38,12 @@ export default class AuthService {
   }
 
   async refresh(refresh: string | null) {
-    const validToken = await this.jwtService.verifyAsync(refresh.split('Bearer ')[1]).catch(() => {
+    if (!refresh) throw new HttpException('Invalid refresh token', HttpStatus.BAD_REQUEST);
+
+    const splitted = refresh.split('Bearer ');
+    if (splitted.length !== 2) throw new HttpException('Invalid refresh token', HttpStatus.BAD_REQUEST);
+
+    const validToken = await this.jwtService.verifyAsync(splitted[1]).catch(() => {
       throw new HttpException('Invalid refresh token', HttpStatus.BAD_REQUEST);
     });
 
