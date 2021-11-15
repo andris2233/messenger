@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const IconPreparationPlugin = require('./webpack/plugins/IconPreparationPlugin');
+const IconPreparationPlugin = require('./webpack/plugins/IconPreparationPlugin/IconPreparationPlugin');
 
 module.exports = {
   configureWebpack: {
