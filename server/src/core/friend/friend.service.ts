@@ -80,8 +80,10 @@ export default class FriendService {
       if (friendship.approved) await friendship.update({ approved: false });
       else await friendship.destroy();
     } else {
-      if (friendship.approved) await friendship.update({ approved: false, toId: senderId, fromId: removeId });
-      else await friendship.destroy();
+      if (friendship.approved) {
+        await friendship.destroy();
+        await this.friendRepository.create({ toId: senderId, fromId: removeId });
+      } else await friendship.destroy();
     }
 
     const user = await this.userService.getUserById(senderId);
@@ -100,13 +102,13 @@ export default class FriendService {
       id: {
         [Op.in]: sequelize.literal(`
             (
-              SELECT "fromId" as "userId"
+              SELECT "toId" as "userId"
               FROM "friend"
               WHERE
                 "approved" = true AND
                 "fromId" = ${user.id}
               UNION
-              SELECT "toId" as "userId"
+              SELECT "fromId" as "userId"
               FROM "friend"
               WHERE
                 "approved" = true AND
