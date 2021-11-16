@@ -11,7 +11,7 @@
 <script>
 import { defineComponent, onMounted, ref } from 'vue';
 import ProfileInfo from '@/components/views/profile/ProfileInfo.vue';
-import { userService } from '@/services/user.service';
+import { userService } from '@/api/user.service';
 import ProfileSettings from '@/components/views/profile/ProfileSettings.vue';
 
 export default defineComponent({

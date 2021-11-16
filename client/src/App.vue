@@ -7,7 +7,7 @@ import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { storage } from '@/_utils/storage';
 import { ITokens } from '@/models/user';
-import { authService } from '@/services/auth.service';
+import { authService } from '@/api/auth.service';
 
 export default defineComponent({
   name: 'App',

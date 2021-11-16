@@ -43,7 +43,7 @@ import { defineComponent, reactive, ref, computed } from 'vue';
 import { IUserCreate } from 'common/model/user';
 import debounce from 'lodash/debounce';
 import { isEmail, isUsername } from 'common/utils/validation/validators';
-import { userService } from '@/services/user.service';
+import { userService } from '@/api/user.service';
 import store from '@/store/index';
 
 import VInput from '@/components/common/VInput.vue';

@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import store from '@/store/index';
-import { request } from '@/services/http';
+import { request } from '@/api/http';
 
 export const userService = {
   validateUsername: (username: string) => request()

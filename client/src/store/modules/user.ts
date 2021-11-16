@@ -2,7 +2,7 @@ import { IUserCreate } from 'common/model/user';
 import { IUserSignInForm, ITokens, IUserDataToken } from '@/models/user';
 import { storage } from '@/_utils/storage';
 import { parseJwt } from '@/_utils/parseJwt';
-import { authService } from '@/services/auth.service';
+import { authService } from '@/api/auth.service';
 
 export const user = {
   namespaced: true,
