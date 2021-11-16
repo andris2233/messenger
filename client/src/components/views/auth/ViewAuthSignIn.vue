@@ -13,13 +13,20 @@
       class="input_shadow"
     />
 
-    <VButton :disabled="!canLogin" class="button_shadow mt-32" text="Sign in" />
+    <div class="form__buttons mt-32">
+      <VButton
+        :disabled="!canLogin"
+        text="Sign in"
+        type="submit"
+        class="button_shadow"
+      />
 
-    <VButton
-      text="Haven't got an account? Register here"
-      class="button_shadow mt-20 button_link"
-      @click.prevent="$router.push({ name: 'SignUp' })"
-    />
+      <VButton
+        text="Haven't got an account? Register here"
+        class="button_shadow mt-8 button_link"
+        @click.prevent="$router.push({ name: 'SignUp' })"
+      />
+    </div>
   </form>
 </template>
 
@@ -79,6 +86,12 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: 14px;
+
+  .form__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
 }
 
 .button_link ::v-deep span {

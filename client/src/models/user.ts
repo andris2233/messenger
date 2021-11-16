@@ -16,3 +16,13 @@ export interface IUserDataToken {
   iat: number,
   exp: number,
 }
+
+export interface IUserProfile {
+  id: number,
+  email: string,
+  username: string,
+  password: string,
+  firstName: string,
+  lastName: string,
+  isPrivate: boolean,
+}

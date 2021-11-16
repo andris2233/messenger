@@ -4,6 +4,7 @@
       v-model:current="current"
       :items="items"
       class="h-100"
+      @click="selectView"
     >
       <template #item="{ item }">{{ item.title }}</template>
     </VTabs>
@@ -12,6 +13,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue';
+import { useRouter } from 'vue-router';
 import VTabs from '@/components/common/VTabs/VTabs.vue';
 
 export default defineComponent({
@@ -20,6 +22,8 @@ export default defineComponent({
   components: { VTabs },
 
   setup() {
+    const router = useRouter();
+
     const items = reactive([
       { id: 0, title: 'Profile' },
       { id: 1, title: 'Friends' },
@@ -27,9 +31,14 @@ export default defineComponent({
     ]);
     const current = ref(items[0]);
 
+    const selectView = () => {
+      router.push({ name: current.value.title });
+    };
+
     return {
       current,
       items,
+      selectView,
     };
   },
 });
@@ -37,6 +46,8 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .header {
+  display: flex;
+  justify-content: center;
   height: 50px;
 }
 </style>

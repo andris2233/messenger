@@ -1,6 +1,10 @@
 <template>
   <div class="profile">
-    <ProfileInfo :user="userData" />
+    <ProfileInfo :user="userData" profile-icon-width="150" />
+    <ProfileSettings
+      :settings="userData"
+      class="mt-32"
+    />
   </div>
 </template>
 
@@ -8,10 +12,11 @@
 import { defineComponent, onMounted, ref } from 'vue';
 import ProfileInfo from '@/components/views/profile/ProfileInfo.vue';
 import { userService } from '@/services/user.service';
+import ProfileSettings from '@/components/views/profile/ProfileSettings.vue';
 
 export default defineComponent({
   name: 'ViewProfile',
-  components: { ProfileInfo },
+  components: { ProfileSettings, ProfileInfo },
   setup() {
     const userData = ref({});
 
