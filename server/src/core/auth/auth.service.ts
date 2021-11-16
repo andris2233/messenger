@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { DecodeOptions } from 'jsonwebtoken';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 
 import UserDto from '../user/dto/user-create.dto';
 import UserService from '../user/user.service';
@@ -10,7 +10,11 @@ import { TOKEN_KEYS } from './auth-token.util';
 
 @Injectable()
 export default class AuthService {
-  constructor(private userService: UserService, private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    @Inject(forwardRef(() => UserService))
+    private userService: UserService,
+  ) {}
 
   async login(userDto: UserDto) {
     let user = null;
@@ -34,7 +38,12 @@ export default class AuthService {
   }
 
   async refresh(refresh: string | null) {
-    const validToken = await this.jwtService.verifyAsync(refresh.split('Bearer ')[1]).catch(() => {
+    if (!refresh) throw new HttpException('Invalid refresh token', HttpStatus.BAD_REQUEST);
+
+    const splitted = refresh.split('Bearer ');
+    if (splitted.length !== 2) throw new HttpException('Invalid refresh token', HttpStatus.BAD_REQUEST);
+
+    const validToken = await this.jwtService.verifyAsync(splitted[1]).catch(() => {
       throw new HttpException('Invalid refresh token', HttpStatus.BAD_REQUEST);
     });
 

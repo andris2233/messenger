@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 
 import FriendModel from './friend.model';
@@ -14,7 +14,7 @@ import BlackListModule from '../blackList/black-list.module';
 import FriendController from './friend.controller';
 
 @Module({
-  imports: [SequelizeModule.forFeature([FriendModel, UserModel]), UserModule, AuthModule, SocketModule, BlackListModule],
+  imports: [SequelizeModule.forFeature([FriendModel, UserModel]), forwardRef(() => UserModule), AuthModule, SocketModule, BlackListModule],
   controllers: [FriendController],
   providers: [FriendService, FriendGateway],
   exports: [FriendService],

@@ -1,6 +1,6 @@
 <template>
   <svg :width="width" :height="height">
-    <use :href="href"></use>
+    <use :href="href" width="100%" height="100%"></use>
   </svg>
 </template>
 
@@ -13,12 +13,17 @@ export default defineComponent({
   props: {
     path: { type: String, default: 'empty' },
 
-    width: { type: Number, default: 80 },
-    height: { type: Number, default: 80 },
+    withFill: { type: Boolean, default: false },
+    withStroke: { type: Boolean, default: false },
+
+    width: { type: [Number, String], default: 80 },
+    height: { type: [Number, String], default: 80 },
   },
 
   setup(props) {
-    const href = computed(() => `${props.path}#${props.path}`);
+    const postfix = `.icon${props.withFill ? '' : '-nf'}${props.withStroke ? '' : '-ns'}`;
+
+    const href = computed(() => `/icons/${props.path}${postfix}.svg#${props.path}${postfix}`);
 
     return { href };
   },
