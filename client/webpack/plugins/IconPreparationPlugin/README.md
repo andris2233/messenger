@@ -7,7 +7,8 @@ The "id" attribute will be added to the icon, according to the path to the file.
 The attributes "fill" and "stroke" will be removed from the icon in accordance with the flags set in the file name.
 
 ***
-## Constructor parameters
+## Constructor
+`new IconPreparationPlugin(inputPath, outputPath)`
 
 ***
 ## Filename format
@@ -30,8 +31,12 @@ Flags with double letter will create 2 files
 |__-ns__  | `logo.icon-ns.svg`         | Indicates that the file is missing stroke (no stroke) |
 
 ### Examples
-| Input file               | Output file                                                                    |
+| Input file               | Output files                                                                   |
 |--------------------------|--------------------------------------------------------------------------------|
+| `logo.icon.svg`          | `logo.icon-nf-ns.svg`                                                          |
+| `logo.icon-f.svg`        | `logo.icon-ns.svg`                                                             |
+| `logo.icon-f-s.svg`      | `logo.icon.svg`                                                                |
 | `logo.icon-ff.svg`       | `logo.icon-nf-ns.svg`, `logo.icon-ns.svg`                                      |
+| `logo.icon-ff-s.svg`     | `logo.icon-nf.svg`, `logo.icon.svg`                                            |
 | `logo.icon-ff-ss.svg`    | `logo.icon-nf-ns.svg`, `logo.icon-nf.svg`, `logo.icon-ns.svg`, `logo.icon.svg` |
 
