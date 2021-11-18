@@ -54,7 +54,7 @@ const setupSingIn = () => {
     await store.dispatch('user/signIn', form);
 
     if (tokens.value.accessToken) {
-      router.push({ name: 'Profile' });
+      await router.push({ name: 'Profile' });
     }
   };
 
@@ -82,7 +82,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .form {
-  margin-top: 53px + 14px; // height of VInput with gap
+  margin-top: 53.59px + 14px; // height of VInput with gap
   display: flex;
   flex-direction: column;
   gap: 14px;

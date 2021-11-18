@@ -10,6 +10,7 @@ const fs = require('fs');
 
 const readDirSync = require('recursive-readdir-sync');
 /* eslint-enable */
+/* eslint-disable no-param-reassign */
 
 /**
  * @typedef {{ inputPath: string, outputPath: string, flags: string[] }} IconPathUnion

@@ -44,13 +44,15 @@ import { IUserCreate } from 'common/model/user';
 import debounce from 'lodash/debounce';
 import { isEmail, isUsername } from 'common/utils/validation/validators';
 import { userService } from '@/api/user.service';
-import store from '@/store/index';
+import { useStore } from '@/store';
 
 import VInput from '@/components/common/VInput.vue';
 import VButton from '@/components/common/VButton.vue';
 
 /*#region SingUp*/
 const setupSingUp = () => {
+  const store = useStore();
+
   const form = reactive<IUserCreate>({ email: '', username: '', password: '' });
 
   const isEmailValid = ref(true);

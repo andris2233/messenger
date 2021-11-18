@@ -1,6 +1,7 @@
 <template>
   <div class="profile">
     <ProfileInfo :user="userData" profile-icon-width="150" />
+
     <ProfileSettings
       :settings="userData"
       class="mt-32"
@@ -16,7 +17,9 @@ import ProfileSettings from '@/components/views/profile/ProfileSettings.vue';
 
 export default defineComponent({
   name: 'ViewProfile',
+
   components: { ProfileSettings, ProfileInfo },
+
   setup() {
     const userData = ref({});
 

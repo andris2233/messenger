@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import store from '@/store/index';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Main',
+    redirect: { name: 'Messages' },
     component: () => import(/* webpackChunkName: 'Main' */ '@/layouts/LayoutMain.vue'),
     meta: { title: 'Messenger', auth: true },
     children: [
@@ -31,6 +31,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/auth',
     name: 'Auth',
+    redirect: { name: 'SignIn' },
     component: () => import(/* webpackChunkName: 'Auth' */ '@/layouts/LayoutAuth.vue'),
     meta: { title: 'Messenger' },
     children: [
@@ -59,15 +60,6 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-});
-
-router.beforeEach((to, from, next) => {
-  document.title = to.meta.title as string;
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  if (to.meta.auth && !store.state.user.tokens.accessToken) next({ name: 'SignIn' });
-  else next();
 });
 
 export default router;

@@ -16,6 +16,7 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'ProfileInfo',
+
   props: {
     profileIconWidth: {
       type: String,

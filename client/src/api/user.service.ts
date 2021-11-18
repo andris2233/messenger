@@ -1,5 +1,4 @@
 import { AxiosResponse } from 'axios';
-import store from '@/store/index';
 import { request } from '@/api/http';
 
 export const userService = {
@@ -12,8 +11,6 @@ export const userService = {
     .then((res: AxiosResponse) => res.data),
 
   getProfileData: () => request()
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    .get('user/me', { headers: { Authorization: `Bearer ${store.state.user.tokens.accessToken}` } })
+    .get('user/me')
     .then((res: AxiosResponse) => res.data),
 };
