@@ -21,7 +21,20 @@
       class="input_shadow"
     />
 
-    <VButton :disabled="!canRegister" text="Sign up" class="button_shadow mt-32" />
+    <div class="form__buttons mt-32">
+      <VButton
+        :disabled="!canRegister"
+        type="submit"
+        text="Sign up"
+        class="button_shadow"
+      />
+
+      <VButton
+        text="Already have an account? Sign in here"
+        class="button_shadow mt-8 button_link"
+        @click.prevent="$router.push({ name: 'SignIn' })"
+      />
+    </div>
   </form>
 </template>
 
@@ -30,14 +43,16 @@ import { defineComponent, reactive, ref, computed } from 'vue';
 import { IUserCreate } from 'common/model/user';
 import debounce from 'lodash/debounce';
 import { isEmail, isUsername } from 'common/utils/validation/validators';
-import { userService } from '@/services/user.service';
-import store from '@/store/index';
+import { userService } from '@/api/user.service';
+import { useStore } from '@/store';
 
 import VInput from '@/components/common/VInput.vue';
 import VButton from '@/components/common/VButton.vue';
 
 /*#region SingUp*/
 const setupSingUp = () => {
+  const store = useStore();
+
   const form = reactive<IUserCreate>({ email: '', username: '', password: '' });
 
   const isEmailValid = ref(true);
@@ -83,5 +98,15 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: 14px;
+
+  .form__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+}
+
+.button_link ::v-deep span {
+  font-size: var(--font-size-h3);
 }
 </style>

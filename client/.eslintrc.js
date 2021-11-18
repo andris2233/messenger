@@ -29,7 +29,6 @@ module.exports = {
       consistent: true,
     }],
     'linebreak-style': 'off',
-    'no-param-reassign': 0,
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'spaced-comment': ['error', 'always', {

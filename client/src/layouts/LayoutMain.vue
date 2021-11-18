@@ -1,5 +1,5 @@
 <template>
-  <TheHeader />
+  <TheHeader class="mb-32" />
   <RouterView />
 </template>
 

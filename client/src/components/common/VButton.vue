@@ -5,6 +5,7 @@
       'button',
       { 'button--not-disabled': !disabled }
     ]"
+    :type="type"
   >
     <slot>
       <span>{{ text }}</span>
@@ -21,14 +22,14 @@ export default defineComponent({
   props: {
     text: { type: String, default: '' },
     disabled: { type: Boolean, default: false },
+    type: { type: String, default: 'button' },
   },
 });
 </script>
 
 <style scoped lang="scss">
 .button {
-  padding: 6px 10px;
-  min-height: 40px;
+  padding: 8px;
   display: flex;
   justify-content: center;
   align-items: center;

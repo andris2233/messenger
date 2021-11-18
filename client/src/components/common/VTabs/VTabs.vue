@@ -94,9 +94,11 @@ export default defineComponent({
 <style lang="scss" scoped>
 .tabs {
   position: relative;
+  width: min-content;
 
   ul.tabs-list {
     display: flex;
+    justify-content: center;
     margin: 0;
     padding: 0;
     height: 100%;
