@@ -48,12 +48,12 @@ const setupSingIn = () => {
 
   const canLogin = computed(() => Object.values(form).every((field) => !!field));
 
-  const tokens = computed(() => store.state.user.tokens);
+  const { accessToken } = store.state.user.tokens;
 
   const onSubmit = async () => {
     await store.dispatch('user/signIn', form);
 
-    if (tokens.value.accessToken) {
+    if (accessToken) {
       await router.push({ name: 'Profile' });
     }
   };
@@ -61,7 +61,6 @@ const setupSingIn = () => {
   return {
     form,
     canLogin,
-    tokens,
     onSubmit,
   };
 };

@@ -3,7 +3,7 @@
     <ProfileInfo :user="userData" profile-icon-width="150" />
 
     <ProfileSettings
-      :settings="userData"
+      v-model:value="userData"
       class="mt-32"
     />
   </div>
@@ -12,8 +12,8 @@
 <script>
 import { defineComponent, onMounted, ref } from 'vue';
 import ProfileInfo from '@/components/views/profile/ProfileInfo.vue';
-import { userService } from '@/api/user.service';
 import ProfileSettings from '@/components/views/profile/ProfileSettings.vue';
+import { userService } from '@/api/user.service';
 
 export default defineComponent({
   name: 'ViewProfile',

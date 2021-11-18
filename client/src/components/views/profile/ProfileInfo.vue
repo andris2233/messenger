@@ -18,14 +18,8 @@ export default defineComponent({
   name: 'ProfileInfo',
 
   props: {
-    profileIconWidth: {
-      type: String,
-      default: '240',
-    },
-    user: {
-      type: Object,
-      default: () => ({}),
-    },
+    profileIconWidth: { type: String, default: '240' },
+    user: { type: Object, default: () => ({}) },
   },
 });
 </script>
