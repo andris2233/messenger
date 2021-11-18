@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Socket } from 'socket.io';
+import AuthService from 'src/core/auth/auth.service';
 
 @Injectable()
 export default class SocketService {
   private socketState = new Map<number, Socket[]>();
+
+  constructor(private authService: AuthService) {}
 
   add(userId: number, socket: Socket): void {
     const existingSockets = this.socketState.get(userId) || [];
@@ -31,5 +34,9 @@ export default class SocketService {
   sendMessage(userId: number, nsp: string, eventName: string, msg: any) {
     const addressat = this.getByNamespace(userId, nsp);
     addressat.forEach((socket: Socket) => socket.emit(eventName, msg));
+  }
+
+  getSender(accessToken: string) {
+    return this.authService.decode(accessToken.split(' ')[1], {});
   }
 }

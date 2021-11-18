@@ -1,3 +1,5 @@
+import { ISocketMsg } from "./common";
+
 export enum ConversationTypes {
   DIALOGUE = 'DIALOGUE',
   CONVERSATION = 'CONVERSATION',
@@ -12,3 +14,5 @@ export type ConversationCreate = {
   info: IConversationCreate;
   memberIds: number[];
 };
+
+export type CoversationCreateMsg = ISocketMsg<ConversationCreate>;

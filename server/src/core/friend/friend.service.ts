@@ -28,7 +28,7 @@ export default class FriendService {
 
   /*#region Used in gateway*/
   async addFriend(namespace: string, data: FriendSendMsg, eventName: string) {
-    const sender = this.getSender(data.accessToken);
+    const sender = this.socketService.getSender(data.accessToken);
     if (typeof sender === 'string') return;
 
     const fromId = Number(sender.id);
@@ -49,7 +49,7 @@ export default class FriendService {
   }
 
   async approveFriend(namespace: string, data: FriendApproveMsg, eventName: string) {
-    const sender = this.getSender(data.accessToken);
+    const sender = this.socketService.getSender(data.accessToken);
     if (typeof sender === 'string') return;
 
     const toId = Number(sender.id);
@@ -64,7 +64,7 @@ export default class FriendService {
   }
 
   async removeFriend(namespace: string, data: FriendRemoveMsg, eventName: string) {
-    const sender = this.getSender(data.accessToken);
+    const sender = this.socketService.getSender(data.accessToken);
     if (typeof sender === 'string') return;
 
     const senderId = Number(sender.id);
@@ -95,7 +95,7 @@ export default class FriendService {
   async getFriends(accessToken: string, query: any) {
     if (query.size === undefined) throw new HttpException('Missed required param "size"', HttpStatus.BAD_REQUEST);
     if (isNaN(Number(query.size)) || query.size === '0') throw new HttpException('Incorrect required param "size"', HttpStatus.BAD_REQUEST);
-    const user = this.getSender(accessToken);
+    const user = this.socketService.getSender(accessToken);
     if (typeof user === 'string') return;
 
     const where: WhereOptions<UserModel> = {
@@ -131,7 +131,7 @@ export default class FriendService {
   async getIncoming(accessToken: string, query: any) {
     if (query.size === undefined) throw new HttpException('Missed required param "size"', HttpStatus.BAD_REQUEST);
     if (isNaN(Number(query.size)) || query.size === '0') throw new HttpException('Incorrect required param "size"', HttpStatus.BAD_REQUEST);
-    const user = this.getSender(accessToken);
+    const user = this.socketService.getSender(accessToken);
     if (typeof user === 'string') return;
 
     const where: WhereOptions<UserModel> = {
@@ -161,7 +161,7 @@ export default class FriendService {
   async getOutgoing(accessToken: string, query: any) {
     if (query.size === undefined) throw new HttpException('Missed required param "size"', HttpStatus.BAD_REQUEST);
     if (isNaN(Number(query.size)) || query.size === '0') throw new HttpException('Incorrect required param "size"', HttpStatus.BAD_REQUEST);
-    const user = this.getSender(accessToken);
+    const user = this.socketService.getSender(accessToken);
     if (typeof user === 'string') return;
 
     const where: WhereOptions<UserModel> = {
@@ -191,10 +191,6 @@ export default class FriendService {
 
   private async checkBlackList(fromId: number, toId: number) {
     return await this.blackListService.checkUserInBlackList(toId, fromId);
-  }
-
-  private getSender(accessToken: string) {
-    return this.authService.decode(accessToken.split(' ')[1], {});
   }
 
   private async checkFriendship(fromId: number, toId: number) {
