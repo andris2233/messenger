@@ -8,6 +8,6 @@ import { store, key } from './store';
 import './middleware';
 
 createApp(App)
-  .use(store, key)
   .use(router)
+  .use(store, key)
   .mount('#app');

@@ -25,11 +25,11 @@ request().interceptors.response.use(
     const { status } = err?.response;
 
     if (status === 401) {
-      const { refreshToken } = store.getters('user/tokens');
-      console.log(refreshToken);
+      const { refreshToken } = store.state.user.tokens;
 
       if (refreshToken) {
         await store.dispatch('user/refreshTokens', refreshToken);
+
         const res: any = await request()
           .request(err.config)
           .catch((er) => er);
@@ -50,6 +50,5 @@ router.beforeEach((to, from, next) => {
 
   if (to.meta.auth && !store.state.user.tokens.accessToken) next({ name: 'Auth' });
   else next();
-  next();
 });
 /*#endregion Router*/

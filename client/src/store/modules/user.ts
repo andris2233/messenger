@@ -23,10 +23,6 @@ export default <Module<IUserState, any>>{
   }),
 
   getters: {
-    tokens(state) {
-      return state.tokens;
-    },
-
     isAuth: (state) => {
       const { accessToken } = state.tokens;
       const parsedAccessToken = parseJwt(accessToken);
