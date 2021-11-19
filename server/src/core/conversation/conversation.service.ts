@@ -59,6 +59,8 @@ export default class ConversationService {
     const conversations = await this.conversationRepository.findAndCountAll({
       offset: Number(offset),
       limit: Number(size),
+      distinct: true,
+      order: [['lastMessageDate', 'DESC']],
 
       where: {
         [Op.or]: [
