@@ -7,11 +7,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700&display=swap');
 
-* {
+*, *::before, *::after {
   font-family: 'Nunito', 'Roboto', sans-serif;
   font-weight: var(--font-weight-regular);
   font-size: var(--font-size-h2);
   line-height: 1.1;
+}
+
+*::selection {
+  background: #0005;
+  color: white;
 }
 
 button { cursor: pointer; }

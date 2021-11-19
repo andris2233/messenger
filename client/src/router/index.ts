@@ -4,27 +4,34 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Main',
+    redirect: { name: 'Messages' },
     component: () => import(/* webpackChunkName: 'Main' */ '@/layouts/LayoutMain.vue'),
     meta: { title: 'Messenger', auth: true },
     children: [
       {
         path: 'profile',
         name: 'Profile',
-        // component: () => import(/* webpackChunkName: '' */ '@/components/views/'),
+        component: () => import(/* webpackChunkName: 'Profile' */ '@/components/views/profile/ViewProfile.vue'),
+        meta: { title: 'Profile', auth: true },
       },
       {
         path: 'friends',
         name: 'Friends',
+        component: () => import(/* webpackChunkName: 'Friends' */ '@/components/views/friends/ViewFriends.vue'),
+        meta: { title: 'Friends', auth: true },
       },
       {
         path: 'messages',
         name: 'Messages',
+        component: () => import(/* webpackChunkName: '' */ '@/components/views/profile/ViewProfile.vue'),
+        meta: { title: 'Messages', auth: true },
       },
     ] as RouteRecordRaw[],
   },
   {
     path: '/auth',
     name: 'Auth',
+    redirect: { name: 'SignIn' },
     component: () => import(/* webpackChunkName: 'Auth' */ '@/layouts/LayoutAuth.vue'),
     meta: { title: 'Messenger' },
     children: [
@@ -53,12 +60,6 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-});
-
-router.beforeEach((to, from, next) => {
-  document.title = to.meta.title as string;
-
-  next();
 });
 
 export default router;

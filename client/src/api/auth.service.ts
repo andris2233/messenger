@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { IUserCreate, IUserSignIn } from 'common/model/user';
 import { isEmail, isUsername } from 'common/utils/validation/validators';
-import { request } from '@/services/http';
+import { request } from '@/api/http';
 import { IUserSignInForm } from '@/models/user';
 
 export const authService = {
@@ -32,4 +32,8 @@ export const authService = {
       .post('/auth/login', userData)
       .then((res: AxiosResponse) => res.data);
   },
+
+  refresh: (token: string) => request()
+    .post('auth/refresh', { refresh: `Bearer ${token}` })
+    .then((res: AxiosResponse) => res.data),
 };

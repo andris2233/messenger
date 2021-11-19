@@ -45,7 +45,6 @@ const setupTabs = (props: TabsProps, context: SetupContext) => {
     const { current, items } = props;
 
     const currentI = items.findIndex((item: any) => props.matchingFunction(current, item));
-
     if (currentI === -1) return emptyResult;
     const el: HTMLElement = elems.value[currentI];
 
@@ -94,9 +93,11 @@ export default defineComponent({
 <style lang="scss" scoped>
 .tabs {
   position: relative;
+  width: min-content;
 
   ul.tabs-list {
     display: flex;
+    justify-content: center;
     margin: 0;
     padding: 0;
     height: 100%;
@@ -130,6 +131,7 @@ export default defineComponent({
     background: var(--color-primary);
     box-shadow: var(--shadow-focused);
     transition: left 300ms, width 300ms;
+    transition-timing-function: ease-in-out;
     pointer-events: none;
   }
 }

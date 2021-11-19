@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, onMounted, ref, reactive } from 'vue';
 
 const setupResizeObserver = () => {
@@ -68,10 +68,12 @@ const setupResizeObserver = () => {
       r.width.value = width;
       r.height.value = height;
 
+      /* eslint-disable no-param-reassign */
       r.circles.forEach((circle) => {
         circle.attrs.cx = circle.positionOffsetByCenter.x + width / 2;
         circle.attrs.cy = circle.positionOffsetByCenter.y + height / 2;
       });
+      /* eslint-enable */
     });
     r.resizeObserver.observe(r.wrapper.value);
   });
