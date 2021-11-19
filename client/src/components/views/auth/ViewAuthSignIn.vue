@@ -32,8 +32,8 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive } from 'vue';
-import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import { useStore } from '@/store';
 import { IUserSignInForm } from '@/models/user';
 
 import VInput from '@/components/common/VInput.vue';

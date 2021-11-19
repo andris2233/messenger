@@ -9,11 +9,11 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, onMounted, ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue';
+import { userService } from '@/api/user.service';
 import ProfileInfo from '@/components/views/profile/ProfileInfo.vue';
 import ProfileSettings from '@/components/views/profile/ProfileSettings.vue';
-import { userService } from '@/api/user.service';
 
 export default defineComponent({
   name: 'ViewProfile',
