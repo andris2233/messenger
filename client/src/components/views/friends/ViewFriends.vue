@@ -3,7 +3,7 @@
     <VInput
       placeholder="Search friends"
       class="input_large"
-      @keydown="onInputKeyDown"
+      @keydown.enter="onSearch"
       @right-icon-click="onSearch"
     >
       <template #icon-right>
@@ -29,16 +29,10 @@ export default defineComponent({
   components: { VIcon, VInput },
 
   setup() {
-    const onSearch = () => {
-      console.log('onSearch');
-    };
-    const onInputKeyDown = (ev) => {
-      if (ev.key === 'Enter') onSearch();
-    };
+    const onSearch = () => { console.log('onSearch'); };
 
     return {
       onSearch,
-      onInputKeyDown,
     };
   },
 });
