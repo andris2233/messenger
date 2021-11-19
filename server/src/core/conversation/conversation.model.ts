@@ -1,6 +1,8 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { BelongsToMany, Column, DataType, Model, Table } from 'sequelize-typescript';
 import { ConversationTypes, IConversationCreate } from '@@/common/model/conversation';
 import ConversationMembersModel from './conversation-members.model';
+import sequelize from 'sequelize';
+import UserModel from '../user/user.model';
 
 @Table({ tableName: 'conversation', createdAt: false, updatedAt: false })
 export default class ConversationModel extends Model<ConversationModel, IConversationCreate> {
@@ -13,9 +15,12 @@ export default class ConversationModel extends Model<ConversationModel, IConvers
   })
   cType: ConversationTypes;
 
-  @Column({ type: DataType.DATE, defaultValue: () => new Date() })
+  @Column({ type: DataType.STRING })
+  title: ConversationTypes;
+
+  @Column({ type: DataType.DATE, defaultValue: sequelize.fn('now'), allowNull: false })
   lastMessageDate: Date;
 
-  @HasMany(() => ConversationMembersModel, { foreignKey: 'conversationId' })
-  conversationsMember: ConversationMembersModel[];
+  @BelongsToMany(() => UserModel, () => ConversationMembersModel)
+  conversationMembers: UserModel[];
 }

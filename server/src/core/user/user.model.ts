@@ -1,9 +1,10 @@
-import { Table, Model, Column, DataType, HasMany } from 'sequelize-typescript';
+import { Table, Model, Column, DataType, HasMany, BelongsToMany } from 'sequelize-typescript';
 
 import { IUserCreate } from '@@/common/model/user';
 import { BlackListModel } from '../blackList/black-list.model';
 import FriendModel from '../friend/friend.model';
 import ConversationMembersModel from '../conversation/conversation-members.model';
+import ConversationModel from '../conversation/conversation.model';
 
 @Table({ tableName: 'user', createdAt: false, updatedAt: false })
 export default class UserModel extends Model<UserModel, IUserCreate> {
@@ -39,6 +40,6 @@ export default class UserModel extends Model<UserModel, IUserCreate> {
   @HasMany(() => BlackListModel, { foreignKey: 'ownerId' })
   blackList: BlackListModel[];
 
-  @HasMany(() => ConversationMembersModel, { foreignKey: 'userId' })
-  conversationsMember: ConversationMembersModel[];
+  @BelongsToMany(() => ConversationModel, () => ConversationMembersModel)
+  conversationsMember: ConversationModel[];
 }
