@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, onMounted, ref, reactive } from 'vue';
 
 const setupResizeObserver = () => {

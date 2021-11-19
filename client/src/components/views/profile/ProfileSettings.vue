@@ -3,31 +3,26 @@
     <VInput
       v-model:value="userData.email"
       label="Email"
-      class="input_shadow"
     />
 
     <VInput
       v-model:value="userData.username"
       label="Username"
-      class="input_shadow"
     />
 
     <VInput
       v-model:value="userData.firstName"
       label="Name"
-      class="input_shadow"
     />
 
     <VInput
       v-model:value="userData.lastName"
       label="Surname"
-      class="input_shadow"
     />
 
     <VInput
       label="Password"
       type="password"
-      class="input_shadow"
     />
   </form>
 </template>

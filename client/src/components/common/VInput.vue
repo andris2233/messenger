@@ -1,18 +1,38 @@
 <template>
   <div class="input">
-    <label class="input__label">
+    <div class="input__label" @click="$refs.input.focus()">
       <slot name="label">
         <span>{{ label }}</span>
       </slot>
 
-      <input
-        :value="value"
-        :type="type"
-        :placeholder="placeholder"
-        class="input__text-field"
-        @input="$emit('update:value', $event.target.value)"
-      >
-    </label>
+      <div class="input__row">
+        <button
+          v-if="$slots['icon-left']"
+          class="input__icon-button"
+          @click.stop="$emit('left-icon-click')"
+        >
+          <slot name="icon-left" />
+        </button>
+
+        <input
+          ref="input"
+          :value="value"
+          :type="type"
+          :placeholder="placeholder"
+          class="input__text-field"
+          @input="$emit('update:value', $event.target.value)"
+          @keydown="$emit('keydown', $event)"
+        >
+
+        <button
+          v-if="$slots['icon-right']"
+          class="input__icon-button"
+          @click.stop="$emit('right-icon-click')"
+        >
+          <slot name="icon-right" />
+        </button>
+      </div>
+    </div>
 
     <!-- todo redo so that errors do not change the height of the component -->
     <div class="input__errors">
@@ -41,7 +61,7 @@ export default defineComponent({
     errors: { type: Array, default: () => ([]) },
   },
 
-  emits: ['update:value'],
+  emits: ['update:value', 'keydown', 'left-icon-click', 'right-icon-click'],
 });
 </script>
 
@@ -49,6 +69,30 @@ export default defineComponent({
 .input {
   display: flex;
   flex-direction: column;
+
+  .input__row {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    height: 36px;
+    background: var(--color-lightest-gray);
+    border-radius: 6px;
+
+    .input__icon-button {
+      padding: 0;
+      margin: 0;
+      width: min-content;
+      height: min-content;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      border: none;
+      outline: none;
+      background: none;
+    }
+  }
 
   .input__label > span{
     display: flex;
@@ -58,20 +102,12 @@ export default defineComponent({
 
   .input__text-field {
     display: flex;
-    padding: 6px 10px;
     width: 100%;
-    height: 36px;
     font-size: var(--font-size-h2);
     font-weight: var(--font-weight-regular);
-    background: var(--color-lightest-gray);
+    background: none;
     border: none;
-    border-radius: 6px;
-    transition: 0.3s all;
     outline: none;
-
-    &:focus {
-      box-shadow: 0 0 10px rgba(0, 163, 255, 0.3);
-    }
   }
 
   .input__errors .input__error {
@@ -84,10 +120,14 @@ export default defineComponent({
 }
 
 // this implementation is in question
-.input.input_shadow .input__text-field {
+.input.input_shadow .input__row {
   box-shadow: var(--shadow-2);
 }
 .input.input_white .input__label span{
   color: var(--color-white);
+}
+.input.input_large .input__row {
+  padding-left: 16px;
+  height: 46px;
 }
 </style>
