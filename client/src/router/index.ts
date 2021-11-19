@@ -11,13 +11,13 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'profile',
         name: 'Profile',
-        component: () => import(/* webpackChunkName: '' */ '@/components/views/profile/ViewProfile.vue'),
+        component: () => import(/* webpackChunkName: 'Profile' */ '@/components/views/profile/ViewProfile.vue'),
         meta: { title: 'Profile', auth: true },
       },
       {
         path: 'friends',
         name: 'Friends',
-        component: () => import(/* webpackChunkName: '' */ '@/components/views/profile/ViewProfile.vue'),
+        component: () => import(/* webpackChunkName: 'Friends' */ '@/components/views/friends/ViewFriends.vue'),
         meta: { title: 'Friends', auth: true },
       },
       {

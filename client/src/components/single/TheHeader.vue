@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue';
+import { defineComponent, ref, reactive, watch, Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import VTabs from '@/components/common/VTabs/VTabs.vue';
 
@@ -25,11 +25,15 @@ export default defineComponent({
     const router = useRouter();
 
     const items = reactive([
-      { id: 0, title: 'Profile' },
-      { id: 1, title: 'Friends' },
-      { id: 2, title: 'Messages' },
+      { id: 0, title: 'Profile', route: { name: 'Profile' } },
+      { id: 1, title: 'Friends', route: { name: 'Friends' } },
+      { id: 2, title: 'Messages', route: { name: 'Messages' } },
     ]);
-    const current = ref(items[0]);
+    const current: Ref = ref(items[0]);
+
+    const routeWatch = watch(router.currentRoute, (nv) => {
+      current.value = items.find((it) => it.route.name === nv.name);
+    }, { immediate: true });
 
     const selectView = () => {
       router.push({ name: current.value.title });
@@ -38,6 +42,7 @@ export default defineComponent({
     return {
       current,
       items,
+      routeWatch,
       selectView,
     };
   },
