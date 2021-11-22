@@ -19,6 +19,7 @@ export default class ConversationService {
     @InjectModel(ConversationMembersModel) private conversationMembersRepository: typeof ConversationMembersModel,
   ) {}
 
+  /*#region Used in gateway*/
   async initDialog(namespace: string, data: CoversationCreateMsg, eventName: string) {
     const sender = this.socketService.getSender(data.accessToken);
     if (typeof sender === 'string') return;
@@ -29,7 +30,9 @@ export default class ConversationService {
       this.socketService.sendMessage(id, namespace, eventName, {});
     });
   }
+  /*#endregion Used in gateway*/
 
+  /*#region Used in controller*/
   async getDialogById(accessToken: string, id: number) {
     const sender = this.socketService.getSender(accessToken);
     if (typeof sender === 'string') return;
@@ -103,4 +106,5 @@ export default class ConversationService {
 
     return conversations;
   }
+  /*#endregion Used in controller*/
 }
