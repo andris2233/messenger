@@ -23,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'messages',
         name: 'Messages',
-        component: () => import(/* webpackChunkName: '' */ '@/components/views/profile/ViewProfile.vue'),
+        component: () => import(/* webpackChunkName: 'Messages' */ '@/components/views/messages/ViewMessages.vue'),
         meta: { title: 'Messages', auth: true },
       },
     ] as RouteRecordRaw[],

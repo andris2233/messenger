@@ -34,6 +34,6 @@ export const authService = {
   },
 
   refresh: (token: string) => request()
-    .post('auth/refresh', { refresh: `Bearer ${token}` })
+    .post('/auth/refresh', { refresh: `Bearer ${token}` })
     .then((res: AxiosResponse) => res.data),
 };
