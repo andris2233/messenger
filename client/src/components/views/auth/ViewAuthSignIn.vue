@@ -93,7 +93,7 @@ export default defineComponent({
   }
 }
 
-.button_link ::v-deep span {
+:deep(.button_link) span {
   font-size: var(--font-size-h3);
 }
 </style>

@@ -1,7 +1,7 @@
 export interface ISearchQuery {
-  search: string;
-  page?: string;
-  size: string;
+  search: string | number;
+  page?: string | number;
+  size: string | number;
 }
 
 export interface ISocketMsg<T> {
