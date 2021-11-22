@@ -10,11 +10,17 @@ interface IUserState {
   tokens: ITokens,
 }
 
+const storageAccessToken = storage.getItem('accessToken');
+
 export default <Module<IUserState, any>>{
   namespaced: true,
 
   state: () => ({
-    authData: <IUserDataToken>{},
+    authData: <IUserDataToken> (
+      storageAccessToken
+        ? parseJwt(storageAccessToken)
+        : {}
+    ),
 
     tokens: {
       accessToken: storage.getItem('accessToken'),
