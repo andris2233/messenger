@@ -14,6 +14,10 @@
   line-height: 1.1;
 }
 
+* {
+  @include scroll;
+}
+
 *::selection {
   background: #0005;
   color: white;

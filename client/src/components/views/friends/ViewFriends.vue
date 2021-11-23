@@ -1,69 +1,39 @@
 <template>
   <div class="friends">
-    <VInput
-      v-model:value="search.value.value"
-      placeholder="Search friends"
-      class="input_large"
-      @keydown.enter="search.onSearch"
-      @right-icon-click="search.onSearch"
+    <VTabs
+      v-model:current="currentPage"
+      :items="pages" class="friends__tabs"
+      disable-underline
     >
-      <template #icon-right>
-        <VIcon
-          path="search/right"
-          width="30"
-          height="30"
-          style="stroke: var(--color-primary); fill: none;"
-        />
+      <template #item="{ item }">
+        <span class="tab">{{ item.title }}</span>
       </template>
-    </VInput>
+    </VTabs>
+
+    <RouterView />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
-import debounce from 'lodash/debounce';
-// import { userService } from '@/api/user.service';
-import { friendService } from '@/api/friend.service';
+import { defineComponent, ref, reactive } from 'vue';
 
-import VInput from '@/components/common/VInput.vue';
-import VIcon from '@/components/common/VIcon.vue';
-
-/*#region Search*/
-const setupSearch = () => {
-  const value = ref('');
-
-  const onSearch = async () => {
-    console.log('Search');
-    // console.log(await userService.get({ search: value.value, page: 0, size: 20 }));
-    console.log(await friendService.getFriends({ search: value.value, page: 0, size: 20 }));
-  };
-
-  const onInput = debounce(() => onSearch(), 300);
-
-  const compValue = computed({
-    get: () => value.value,
-    set: (v) => {
-      value.value = v;
-      onInput();
-    },
-  });
-
-  return {
-    value: compValue,
-    onSearch,
-    onInput,
-  };
-};
-/*#endregion Search*/
+import VTabs from '@/components/common/VTabs/VTabs.vue';
 
 export default defineComponent({
   name: 'ViewFriends',
 
-  components: { VIcon, VInput },
+  components: { VTabs },
 
   setup() {
+    const pages = reactive([
+      { title: 'Friends' },
+      { title: 'Incoming request' },
+      { title: 'Outgoing request' },
+    ]);
+
     return {
-      search: setupSearch(),
+      currentPage: ref(pages[0]),
+      pages,
     };
   },
 });
@@ -73,5 +43,23 @@ export default defineComponent({
 .friends {
   margin: 0 auto;
   width: 460px;
+  display: flex;
+  flex-direction: column;
+
+  :deep(.friends__tabs) {
+    margin-bottom: 10px;
+    height: 40px;
+
+    li.tabs-list__item {
+      & > button { padding: 10px !important; }
+      &:first-child > button { padding-left: 0 !important; }
+      &:last-child > button { padding-right: 0 !important; }
+    }
+
+    .tab {
+      font-size: var(--font-size-h4);
+      white-space: nowrap;
+    }
+  }
 }
 </style>

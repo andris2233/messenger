@@ -42,6 +42,8 @@ export default defineComponent({
       { id: 2, title: 'Messages', route: { name: 'Messages' } },
     ]);
 
+    // const tabs = router.options.routes;
+
     const currentTab = computed({
       set: (v: any) => {
         const currentTabIndex = tabs.findIndex((it) => it.route.name === router.currentRoute.value.name);
@@ -68,6 +70,8 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .layout {
+  display: flex;
+  flex-direction: column;
   height: 100vh;
   perspective: 2000px;
   overflow: hidden;
@@ -75,14 +79,15 @@ export default defineComponent({
   .layout__content {
     position: relative;
     width: 100%;
-    height: 100%;
+    flex: 1;
 
     .layout__view {
       position: absolute;
       left: 0;
       right: 0;
       top: 32px;
-      bottom: 0;
+      bottom: 32px;
+      overflow: auto;
     }
   }
 }

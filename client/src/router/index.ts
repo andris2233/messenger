@@ -17,8 +17,35 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'friends',
         name: 'Friends',
+        redirect: { name: 'FriendsMain' },
         component: () => import(/* webpackChunkName: 'Friends' */ '@/components/views/friends/ViewFriends.vue'),
         meta: { title: 'Friends', auth: true },
+        children: [
+          {
+            path: '',
+            name: 'FriendsMain',
+            component: () => import(
+              /* webpackChunkName: 'Friends' */
+              '@/components/views/friends/views/ViewFriendsMain.vue'
+            ),
+          },
+          {
+            path: 'incoming',
+            name: 'FriendsIncoming',
+            component: () => import(
+              /* webpackChunkName: 'Friends' */
+              '@/components/views/friends/views/ViewFriendsIncoming.vue'
+            ),
+          },
+          {
+            path: 'outgoing',
+            name: 'FriendsOutgoing',
+            component: () => import(
+              /* webpackChunkName: 'Friends' */
+              '@/components/views/friends/views/ViewFriendsOutgoing.vue'
+            ),
+          },
+        ],
       },
       {
         path: 'messages',

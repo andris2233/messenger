@@ -23,7 +23,7 @@
       class="tabs__underline"
       :style="{
         left: `${underline.left}px`,
-        width: `${underline.width}px`,
+        width: `${underline.width}px`
       }"
     />
   </div>
@@ -41,7 +41,7 @@ const setupTabs = (props: TabsProps, context: SetupContext) => {
   const underline = computed(() => {
     const emptyResult = { show: false, left: 0, width: 0 };
 
-    if (!isMounted.value) return emptyResult;
+    if (!isMounted.value || props.disableUnderline) return emptyResult;
     const { current, items } = props;
 
     const currentI = items.findIndex((item: any) => props.matchingFunction(current, item));
@@ -49,7 +49,7 @@ const setupTabs = (props: TabsProps, context: SetupContext) => {
     const el: HTMLElement = elems.value[currentI];
 
     return {
-      show: true,
+      show: !props.disableUnderline,
       left: el.offsetLeft ? el.offsetLeft : 0,
       width: el.clientWidth ? el.clientWidth : 0,
     };
@@ -70,6 +70,8 @@ export default defineComponent({
   props: {
     current: { type: Object as PropType<TabsItem>, default: null },
     items: { type: Array as PropType<TabsItem[]>, default: () => ([]) },
+
+    disableUnderline: { type: Boolean, default: false },
 
     matchingFunction: {
       type: Function as PropType<(current: TabsItem, item: TabsItem) => boolean>,
@@ -114,6 +116,7 @@ export default defineComponent({
         border: none;
         outline: none;
         user-select: none;
+        transition: text-shadow 200ms, color 200ms;
       }
     }
 
