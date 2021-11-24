@@ -30,5 +30,6 @@ export enum SOCKET_EVENTS {
   ADD_FRIEND = 'addFriend',
   APPROVE_FRIEND = 'approveFriend',
   REMOVE_FRIEND = 'removeFriend',
-  SEE_FRIEND = 'seeFriend'
+  SEE_FRIEND = 'seeFriend',
+  HIDDEN_ADD_FRIEND = 'hiddenAddFriend'
 };

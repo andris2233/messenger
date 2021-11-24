@@ -11,6 +11,7 @@ import { ISearchQuery } from '@@/common/model/common';
 import { isEmail, isUsername } from '@@/common/utils/validation/validators';
 import { parseJwt } from '../../common/utils/jwt';
 import sequelize from 'sequelize';
+import { FRIEND_STATUS } from '@@/common/model/friend';
 
 @Injectable()
 export default class UserService {
@@ -53,13 +54,13 @@ export default class UserService {
             SELECT "toId" as "userId"
             FROM "friend"
             WHERE
-              "approved" = true AND
+              "status" = '${FRIEND_STATUS.APPROVED}' AND
               "fromId" = ${user.id}
             UNION
             SELECT "fromId" as "userId"
             FROM "friend"
             WHERE
-              "approved" = true AND
+              "status" = '${FRIEND_STATUS.APPROVED}' AND
               "toId" = ${user.id}
           )
         `),

@@ -27,7 +27,7 @@ export default class FriendService {
   ) {}
 
   /*#region Used in gateway*/
-  async addFriend(namespace: string, data: FriendSendMsg, eventName: string) {
+  async addFriend(namespace: string, data: FriendSendMsg, eventName: string, hiddenEventName: string) {
     const sender = this.getSender(data.accessToken);
     if (typeof sender === 'string') return;
 
@@ -40,15 +40,18 @@ export default class FriendService {
     if (isBlackList) throw new WsException(getErrorMessage('blacklist'));
 
     const friendship = await this.getFriendship(fromId, toId);
+    const user = await this.userService.getUserById(fromId);
+
     if (friendship) {
       if (friendship.fromId === fromId) {
-        if (friendship.deleted) await friendship.update({ deleted: false });
-        else throw new WsException(getErrorMessage('already created friendship'));
+        if (friendship.deleted) {
+          await friendship.update({ deleted: false });
+          this.socketService.sendMessage(toId, namespace, hiddenEventName, { from: user });
+        } else throw new WsException(getErrorMessage('already created friendship'));
       } else throw new WsException(getErrorMessage('already created friendship'));
     } else {
       await this.friendRepository.create({ fromId, toId });
 
-      const user = await this.userService.getUserById(fromId);
       this.socketService.sendMessage(toId, namespace, eventName, { from: user });
     }
   }
@@ -134,13 +137,13 @@ export default class FriendService {
               SELECT "toId" as "userId"
               FROM "friend"
               WHERE
-                "status" = ${FRIEND_STATUS.APPROVED} AND
+                "status" = '${FRIEND_STATUS.APPROVED}' AND
                 "fromId" = ${user.id}
               UNION
               SELECT "fromId" as "userId"
               FROM "friend"
               WHERE
-                "status" = ${FRIEND_STATUS.APPROVED} AND
+                "status" = '${FRIEND_STATUS.APPROVED}' AND
                 "toId" = ${user.id}
             )
           `),
@@ -170,7 +173,7 @@ export default class FriendService {
               SELECT "fromId" as "userId"
               FROM "friend"
               WHERE
-                "status" != ${FRIEND_STATUS.APPROVED} AND
+                "status" != '${FRIEND_STATUS.APPROVED}' AND
                 "toId" = ${user.id}
             )
           `),
@@ -200,7 +203,7 @@ export default class FriendService {
               SELECT "toId" as "userId"
               FROM "friend"
               WHERE
-                "status" != ${FRIEND_STATUS.APPROVED} AND
+                "status" != '${FRIEND_STATUS.APPROVED}' AND
                 "fromId" = ${user.id}
             )
           `),
