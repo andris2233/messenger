@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, reactive, onUnmounted, Ref } from 'vue';
+import { defineComponent, ref, reactive, onMounted, onUnmounted, Ref } from 'vue';
 import ResizeObserver from 'resize-observer-polyfill';
 
 const setupResizeObserver = () => {
@@ -56,7 +56,7 @@ const setupResizeObserver = () => {
     },
   ]);
 
-  const wrapper: Ref<HTMLElement> = ref(document.body);
+  const wrapper: Ref<HTMLElement> = ref({} as HTMLElement);
 
   const width = ref(1440);
   const height = ref(1024);
@@ -77,6 +77,7 @@ const setupResizeObserver = () => {
   onUnmounted(() => resizeObserver.disconnect());
 
   return {
+    wrapper,
     circles,
     width,
     height,

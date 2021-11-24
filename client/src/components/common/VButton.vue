@@ -62,4 +62,15 @@ export default defineComponent({
     &:active { box-shadow: var(--shadow-2), var(--shadow-activated); }
   }
 }
+
+.button.button_flat {
+  background-color: transparent;
+  color: var(--color-primary);
+  box-shadow: none;
+
+  &:not(:disabled) {
+    &:focus { box-shadow: none; text-shadow: var(--shadow-focused); }
+    &:active { box-shadow: none; text-shadow: var(--shadow-activated); }
+  }
+}
 </style>

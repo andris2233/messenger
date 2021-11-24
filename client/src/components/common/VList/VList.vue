@@ -4,7 +4,6 @@
       v-for="(group, groupI) in groups"
       :key="groupI"
       :group="group"
-      class="mt-10"
     >
       <template v-if="$slots.group" #group="props">
         <slot name="group" v-bind="{ ...props, groupI }" />
@@ -37,6 +36,8 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .list {
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 </style>

@@ -1,3 +1,4 @@
+/*#region Indents*/
 @each $i in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100 ) {
   .m-#{$i} { margin: #{$i}px; }
   .p-#{$i} { padding: #{$i}px; }
@@ -9,17 +10,24 @@
 }
 
 @each $i in (0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100) {
-  .w-#{$i} { width: #{$i} + '%'; }
-  .h-#{$i} { height: #{$i} + '%'; }
+  @each $m in ('', 'min-', 'max-') {
+    .#{$m}w-#{$i} { #{$m}width: #{$i} + '%'; }
+    .#{$m}h-#{$i} { #{$m}height: #{$i} + '%'; }
+  }
 }
+/*#endregion Indents*/
 
+/*#region Positions*/
+@each $position in (relative, absolute, fixed, sticky) {
+  .#{$position} { position: $position; }
+}
+/*#endregion Positions*/
+
+/*#region Flexbox*/
 .d-flex { display: flex; }
-
-.flex-row { flex-direction: row; }
-.flex-col { flex-direction: column; }
-
-.flex-row-reverse { flex-direction: row-reverse; }
-.flex-col-reverse { flex-direction: column-reverse; }
+@each $i in (row, column, row-reverse, column-reverse) {
+  .flex-#{$i} { flex-direction: $i; }
+}
 
 @each $key, $value in (
         center: center,
@@ -39,7 +47,20 @@
 @each $i in (1, 2, 3, 4, 5, 6, 7, 8) {
   .flex-#{$i} { flex: #{$i}; }
 }
+/*#endregion Flex*/
 
-@each $i in (h1, h2, h3, h4) {
-  .#{$i} { font-size: var(--font-size-#{$i}); }
+/*#region Text*/
+@each $h in (h1, h2, h3, h4) {
+  .#{$h} { font-size: var(--font-size-#{$h}); }
 }
+/*#endregion Text*/
+
+/*#region Overflow*/
+@each $overflow in (visible, hidden, scroll, auto) {
+  .overflow-#{$overflow} { overflow: $overflow; }
+
+  @each $axis in (x, y) {
+    .overflow-#{$axis}-#{$overflow} { overflow-#{$axis}: $overflow; }
+  }
+}
+/*#endregion Overflow*/

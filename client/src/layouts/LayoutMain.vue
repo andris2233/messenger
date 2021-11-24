@@ -23,6 +23,7 @@
 <script lang="ts">
 import { defineComponent, reactive, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+
 import TheHeader from '@/components/single/header/TheHeader.vue';
 
 export default defineComponent({
@@ -37,16 +38,16 @@ export default defineComponent({
     const onTransitionEnd = () => { transitionName.value = ''; };
 
     const tabs = reactive([
-      { id: 0, title: 'Profile', route: { name: 'Profile' } },
-      { id: 1, title: 'Friends', route: { name: 'Friends' } },
-      { id: 2, title: 'Messages', route: { name: 'Messages' } },
+      { title: 'Profile', route: { name: 'Profile' } },
+      { title: 'Friends', route: { name: 'Friends' } },
+      { title: 'Messages', route: { name: 'Messages' } },
     ]);
-
-    // const tabs = router.options.routes;
 
     const currentTab = computed({
       set: (v: any) => {
-        const currentTabIndex = tabs.findIndex((it) => it.route.name === router.currentRoute.value.name);
+        const currentTabIndex = tabs
+          .findIndex((it) => it.route.name === router.currentRoute.value.name
+            || router.currentRoute.value.matched.some((m) => it.route.name === m.name));
         const nextTabIndex = tabs.findIndex((it) => it.route.name === v.route.name);
 
         transitionName.value = currentTabIndex < nextTabIndex
@@ -55,7 +56,8 @@ export default defineComponent({
 
         router.push({ name: v.route.name });
       },
-      get: () => tabs.find((it) => it.route.name === router.currentRoute.value.name),
+      get: () => tabs.find((it) => it.route.name === router.currentRoute.value.name
+        || router.currentRoute.value.matched.some((m) => it.route.name === m.name)),
     });
 
     return {
@@ -78,6 +80,7 @@ export default defineComponent({
 
   .layout__content {
     position: relative;
+    margin-top: 32px;
     width: 100%;
     flex: 1;
 
@@ -85,9 +88,8 @@ export default defineComponent({
       position: absolute;
       left: 0;
       right: 0;
-      top: 32px;
-      bottom: 32px;
-      overflow: auto;
+      top: 0;
+      bottom: 0;
     }
   }
 }
