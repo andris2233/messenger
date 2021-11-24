@@ -6,7 +6,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import UserModel from './user.model';
 import UserDto from './dto/user-create.dto';
 
-import { IUserPatch } from '@@/common/model/user';
+import { IUserPatch, IUserPatchPassword } from '@@/common/model/user';
 import { ISearchQuery } from '@@/common/model/common';
 import { isEmail, isUsername } from '@@/common/utils/validation/validators';
 import { parseJwt } from '../../common/utils/jwt';
@@ -116,6 +116,22 @@ export default class UserService {
 
     await this.userRepository.update(values, { where: { id } });
     return id;
+  }
+
+  async updatePassword(accessToken: string, userPasswords: IUserPatchPassword) {
+    const id = Number(parseJwt(accessToken).id);
+
+    const { oldPassword, newPassword } = userPasswords;
+
+    if (!oldPassword || !newPassword) throw new HttpException('Incorrect message', HttpStatus.BAD_REQUEST);
+    if (oldPassword === newPassword) throw new HttpException('Same passwords', HttpStatus.BAD_REQUEST);
+
+    const user = await this.userRepository.findByPk(id);
+
+    if (!bcrypt.compare(oldPassword, user.password)) throw new HttpException('Incorrect old password', HttpStatus.BAD_REQUEST);
+    user.update({ password: bcrypt.hash(newPassword) });
+
+    return user.id;
   }
   /*#endregion Used in controllers*/
 
