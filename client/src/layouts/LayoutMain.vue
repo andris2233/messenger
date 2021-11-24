@@ -43,7 +43,7 @@ export default defineComponent({
     ]);
 
     const currentTab = computed({
-      set: (v) => {
+      set: (v: any) => {
         const currentTabIndex = tabs.findIndex((it) => it.route.name === router.currentRoute.value.name);
         const nextTabIndex = tabs.findIndex((it) => it.route.name === v.route.name);
 

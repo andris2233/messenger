@@ -48,12 +48,12 @@ const setupSingIn = () => {
 
   const canLogin = computed(() => Object.values(form).every((field) => !!field));
 
-  const { accessToken } = store.state.user.tokens;
-
   const onSubmit = async () => {
     await store.dispatch('user/signIn', form);
 
-    if (accessToken) {
+    const isAuth = store.getters['user/isAuth'];
+
+    if (isAuth) {
       await router.push({ name: 'Profile' });
     }
   };
@@ -93,7 +93,7 @@ export default defineComponent({
   }
 }
 
-.button_link ::v-deep span {
+:deep(.button_link) span {
   font-size: var(--font-size-h3);
 }
 </style>

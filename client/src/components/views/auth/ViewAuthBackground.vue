@@ -12,73 +12,75 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, reactive } from 'vue';
+import { defineComponent, onMounted, ref, reactive, onUnmounted, Ref } from 'vue';
+import ResizeObserver from 'resize-observer-polyfill';
 
 const setupResizeObserver = () => {
-  const r = {
-    wrapper: ref(null),
-    width: ref(1440),
-    height: ref(1024),
-
-    circles: reactive([
-      {
-        positionOffsetByCenter: {
-          x: -352.204 - 1440 / 2,
-          y: 881.714 - 1024 / 2,
-        },
-        attrs: {
-          cx: null,
-          cy: null,
-          r: 1160.18,
-          fill: 'var(--color-white)',
-        },
+  const circles = reactive([
+    {
+      positionOffsetByCenter: {
+        x: -352.204 - 1440 / 2,
+        y: 881.714 - 1024 / 2,
       },
-      {
-        positionOffsetByCenter: {
-          x: -147.675 - 1440 / 2,
-          y: -1359.62 - 1024 / 2,
-        },
-        attrs: {
-          cx: null,
-          cy: null,
-          r: 1763.12,
-          fill: 'var(--color-white)',
-          'fill-opacity': '0.42',
-        },
+      attrs: {
+        cx: 0,
+        cy: 0,
+        r: 1160.18,
+        fill: 'var(--color-white)',
       },
-      {
-        positionOffsetByCenter: {
-          x: 2317.07 - 1440 / 2,
-          y: 1581.15 - 1024 / 2,
-        },
-        attrs: {
-          cx: null,
-          cy: null,
-          r: 1763.12,
-          fill: 'var(--color-secondary)',
-        },
+    },
+    {
+      positionOffsetByCenter: {
+        x: -147.675 - 1440 / 2,
+        y: -1359.62 - 1024 / 2,
       },
-    ]),
-  };
+      attrs: {
+        cx: 0,
+        cy: 0,
+        r: 1763.12,
+        fill: 'var(--color-white)',
+        'fill-opacity': '0.42',
+      },
+    },
+    {
+      positionOffsetByCenter: {
+        x: 2317.07 - 1440 / 2,
+        y: 1581.15 - 1024 / 2,
+      },
+      attrs: {
+        cx: 0,
+        cy: 0,
+        r: 1763.12,
+        fill: 'var(--color-secondary)',
+      },
+    },
+  ]);
 
-  onMounted(() => {
-    r.resizeObserver = new ResizeObserver((ev) => {
-      const { width, height } = ev[0].contentRect;
+  const wrapper: Ref<HTMLElement> = ref(document.body);
 
-      r.width.value = width;
-      r.height.value = height;
+  const width = ref(1440);
+  const height = ref(1024);
 
-      /* eslint-disable no-param-reassign */
-      r.circles.forEach((circle) => {
-        circle.attrs.cx = circle.positionOffsetByCenter.x + width / 2;
-        circle.attrs.cy = circle.positionOffsetByCenter.y + height / 2;
-      });
-      /* eslint-enable */
-    });
-    r.resizeObserver.observe(r.wrapper.value);
+  const resizeObserver = new ResizeObserver((ev) => {
+    const { width: w, height: h } = ev[0].contentRect;
+
+    width.value = w;
+    height.value = h;
+
+    for (let i = 0; i < circles.length; i++) {
+      circles[i].attrs.cx = circles[i].positionOffsetByCenter.x + w / 2;
+      circles[i].attrs.cy = circles[i].positionOffsetByCenter.y + h / 2;
+    }
   });
 
-  return r;
+  onMounted(() => resizeObserver.observe(wrapper.value));
+  onUnmounted(() => resizeObserver.disconnect());
+
+  return {
+    circles,
+    width,
+    height,
+  };
 };
 
 export default defineComponent({
