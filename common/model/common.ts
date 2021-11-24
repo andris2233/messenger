@@ -1,5 +1,5 @@
 export interface ISearchQuery {
-  search: string | number;
+  search: string;
   page?: string | number;
   size: string | number;
 }

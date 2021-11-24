@@ -4,12 +4,11 @@ import { WsException } from '@nestjs/websockets';
 import { Op, WhereOptions } from 'sequelize';
 
 import SocketService from 'src/socket-adapter/socket.service';
-import AuthService from '../auth/auth.service';
 import UserService from '../user/user.service';
 import BlackListService from '../blackList/black-list.service';
 
 import FriendModel from './friend.model';
-import { FriendApproveMsg, FriendRemoveMsg, FriendSendMsg } from '@@/common/model/friend';
+import { FriendApproveMsg, FriendSeeMsg, FriendRemoveMsg, FriendSendMsg, FRIEND_STATUS } from '@@/common/model/friend';
 import { getErrorMessage } from 'src/common/utils/socket';
 import UserModel from '../user/user.model';
 import sequelize from 'sequelize';
@@ -23,11 +22,10 @@ export default class FriendService {
     @Inject(forwardRef(() => UserService))
     private userService: UserService,
     private socketService: SocketService,
-    private authService: AuthService,
   ) {}
 
   /*#region Used in gateway*/
-  async addFriend(namespace: string, data: FriendSendMsg, eventName: string) {
+  async addFriend(namespace: string, data: FriendSendMsg, eventName: string, hiddenEventName: string) {
     const sender = this.socketService.getSender(data.accessToken);
     if (typeof sender === 'string') return;
 
@@ -39,13 +37,21 @@ export default class FriendService {
     const isBlackList = await this.checkBlackList(fromId, toId);
     if (isBlackList) throw new WsException(getErrorMessage('blacklist'));
 
-    const isFriendship = await this.checkFriendship(fromId, toId);
-    if (isFriendship) throw new WsException(getErrorMessage('already created friendship'));
-
-    await this.friendRepository.create({ fromId, toId });
-
+    const friendship = await this.getFriendship(fromId, toId);
     const user = await this.userService.getUserById(fromId);
-    this.socketService.sendMessage(toId, namespace, eventName, { from: user });
+
+    if (friendship) {
+      if (friendship.fromId === fromId) {
+        if (friendship.deleted) {
+          await friendship.update({ deleted: false });
+          this.socketService.sendMessage(toId, namespace, hiddenEventName, { from: user });
+        } else throw new WsException(getErrorMessage('already created friendship'));
+      } else throw new WsException(getErrorMessage('already created friendship'));
+    } else {
+      await this.friendRepository.create({ fromId, toId });
+
+      this.socketService.sendMessage(toId, namespace, eventName, { from: user });
+    }
   }
 
   async approveFriend(namespace: string, data: FriendApproveMsg, eventName: string) {
@@ -56,11 +62,15 @@ export default class FriendService {
     const fromId = Number(data.msg.fromId);
     if (isNaN(fromId)) throw new WsException(getErrorMessage('incorrect user'));
 
-    const result = await this.friendRepository.update({ approved: true }, { where: { fromId, toId } });
-    if (result[0] === 0) throw new WsException(getErrorMessage('not created friendship'));
+    const friendship = await this.getFriendship(fromId, toId);
+    if (!friendship) throw new WsException(getErrorMessage('not created friendship'));
 
-    const user = await this.userService.getUserById(toId);
-    this.socketService.sendMessage(fromId, namespace, eventName, { to: user });
+    if (friendship.toId === toId && friendship.status !== FRIEND_STATUS.APPROVED) {
+      friendship.update({ status: FRIEND_STATUS.APPROVED });
+
+      const user = await this.userService.getUserById(toId);
+      this.socketService.sendMessage(fromId, namespace, eventName, { to: user });
+    } else throw new WsException(getErrorMessage('incorrect friendship'));
   }
 
   async removeFriend(namespace: string, data: FriendRemoveMsg, eventName: string) {
@@ -73,21 +83,41 @@ export default class FriendService {
     if (isNaN(removeId)) throw new WsException(getErrorMessage('incorrect user'));
 
     const friendship = await this.getFriendship(senderId, removeId);
-
     if (!friendship) throw new WsException(getErrorMessage('incorrect friendship'));
 
+    const user = await this.userService.getUserById(senderId);
+
     if (senderId === friendship.toId) {
-      if (friendship.approved) await friendship.update({ approved: false });
-      else await friendship.destroy();
+      if (friendship.status === FRIEND_STATUS.APPROVED) {
+        await friendship.update({ status: FRIEND_STATUS.APPROVED });
+      } else {
+        await friendship.update({ deleted: true });
+      }
     } else {
-      if (friendship.approved) {
+      if (friendship.status === FRIEND_STATUS.APPROVED) {
         await friendship.destroy();
-        await this.friendRepository.create({ toId: senderId, fromId: removeId });
-      } else await friendship.destroy();
+        await this.friendRepository.create({ toId: senderId, fromId: removeId, deleted: true, status: FRIEND_STATUS.SEEN });
+      } else {
+        await friendship.update({ deleted: true });
+      }
     }
 
-    const user = await this.userService.getUserById(senderId);
     this.socketService.sendMessage(removeId, namespace, eventName, { friend: user });
+  }
+
+  async seeRequestFriend(data: FriendSeeMsg) {
+    const sender = this.socketService.getSender(data.accessToken);
+    if (typeof sender === 'string') return;
+
+    const senderId = Number(sender.id);
+    const userId = Number(data.msg.userId);
+
+    const friendship = await this.getFriendship(senderId, userId);
+
+    if (!friendship || friendship.toId !== senderId || friendship.status !== FRIEND_STATUS.SEEN)
+      throw new WsException(getErrorMessage('incorrect friendship'));
+
+    await friendship.update({ status: FRIEND_STATUS.SEEN });
   }
   /*#endregion Used in gateway*/
 
@@ -105,13 +135,13 @@ export default class FriendService {
               SELECT "toId" as "userId"
               FROM "friend"
               WHERE
-                "approved" = true AND
+                "status" = '${FRIEND_STATUS.APPROVED}' AND
                 "fromId" = ${user.id}
               UNION
               SELECT "fromId" as "userId"
               FROM "friend"
               WHERE
-                "approved" = true AND
+                "status" = '${FRIEND_STATUS.APPROVED}' AND
                 "toId" = ${user.id}
             )
           `),
@@ -141,7 +171,7 @@ export default class FriendService {
               SELECT "fromId" as "userId"
               FROM "friend"
               WHERE
-                "approved" = false AND
+                "status" != '${FRIEND_STATUS.APPROVED}' AND
                 "toId" = ${user.id}
             )
           `),
@@ -171,7 +201,7 @@ export default class FriendService {
               SELECT "toId" as "userId"
               FROM "friend"
               WHERE
-                "approved" = false AND
+                "status" != '${FRIEND_STATUS.APPROVED}' AND
                 "fromId" = ${user.id}
             )
           `),
