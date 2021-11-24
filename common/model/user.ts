@@ -20,6 +20,11 @@ export type IUserPatch = {
   isPrivate?: boolean;
 }
 
+export type IUserPatchPassword = {
+  oldPassword: string;
+  newPassword: string;
+}
+
 export interface IUser {
   id: number;
   email: string;

@@ -9,6 +9,7 @@ import { ApiPaginatedDto } from 'src/common/dto';
 import { PageDto, SearchDto, SizeDto } from 'src/common/dto';
 import { UserGetDto } from './dto/user-get.dto';
 import { UserPatchDto } from './dto/user-patch.dto';
+import { UserPatchPasswordDto } from './dto/user-password.dto';
 
 @Controller('/api/user')
 @ApiTags('Пользователь')
@@ -64,10 +65,21 @@ export default class UserController {
 
   @Patch('/')
   @UseGuards(AuthGuard)
-  @ApiOperation({ summary: 'Обновление пользователя' })
   @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Обновление данных ЛК' })
+  @ApiResponse({ status: 200, type: Number })
   @ApiBody({ type: UserPatchDto })
   patchUser(@Headers() { authorization: accessToken }, @Body() body) {
     return this.userService.updateUser(accessToken, body);
+  }
+
+  @Patch('/password')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Обновление пароля' })
+  @ApiResponse({ status: 200, type: Number })
+  @ApiBody({ type: UserPatchPasswordDto })
+  patchPassword(@Headers() { authorization: accessToken }, @Body() body) {
+    return this.userService.updatePassword(accessToken, body);
   }
 }
