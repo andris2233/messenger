@@ -109,7 +109,7 @@ export default class UserService {
           else if (key === 'username') await this.validateUsername(user.email);
           else if (typeof resultValue === 'string') {
             if (!resultValue.trim()) resultValue = null;
-            else if (!isName(resultValue)) return collection;
+            else if (!isName(resultValue)) throw new HttpException('Invalid fristName/lastName', HttpStatus.BAD_REQUEST);
           } else if (resultValue !== null) return collection;
 
           collection[key] = resultValue;
