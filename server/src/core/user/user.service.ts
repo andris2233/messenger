@@ -128,8 +128,8 @@ export default class UserService {
 
     const user = await this.userRepository.findByPk(id);
 
-    if (!bcrypt.compare(oldPassword, user.password)) throw new HttpException('Incorrect old password', HttpStatus.BAD_REQUEST);
-    user.update({ password: bcrypt.hash(newPassword) });
+    if (!(await bcrypt.compare(oldPassword, user.password))) throw new HttpException('Incorrect old password', HttpStatus.BAD_REQUEST);
+    await user.update({ password: await bcrypt.hash(newPassword, 5) });
 
     return user.id;
   }
