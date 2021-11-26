@@ -8,7 +8,7 @@ import UserDto from './dto/user-create.dto';
 
 import { IUserPatch, IUserPatchPassword } from '@@/common/model/user';
 import { ISearchQuery } from '@@/common/model/common';
-import { isEmail, isUsername } from '@@/common/utils/validation/validators';
+import { isEmail, isUsername, isName } from '@@/common/utils/validation/validators';
 import { parseJwt } from '../../common/utils/jwt';
 import sequelize from 'sequelize';
 import { FRIEND_STATUS } from '@@/common/model/friend';
@@ -95,24 +95,27 @@ export default class UserService {
     const foundUser = await this.userRepository.findByPk(Number(id), { attributes: { exclude: ['id'] } });
     if (!foundUser) throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
 
-    const values = await Object.keys(this.userRepository.rawAttributes).reduce(async (acc, key) => {
-      const collection = await acc;
+    const values = await Object.keys(this.userRepository.rawAttributes)
+      .filter((key: string) => key !== 'password')
+      .reduce(async (acc, key) => {
+        const collection = await acc;
 
-      if (key === 'id') return collection;
+        if (key === 'id') return collection;
 
-      if (key in user) {
-        let resultValue = user[key];
+        if (key in user) {
+          let resultValue = user[key];
 
-        if (key === 'email') await this.validateEmail(user.email);
-        else if (key === 'username') await this.validateUsername(user.email);
-        else if (key === 'password') {
-          if (await bcrypt.compare(user.password, foundUser.password)) throw new HttpException('Same "password"', HttpStatus.BAD_REQUEST);
-          resultValue = bcrypt.hash(user.password, 5);
+          if (key === 'email') await this.validateEmail(user.email);
+          else if (key === 'username') await this.validateUsername(user.email);
+          else if (typeof resultValue === 'string') {
+            if (!resultValue.trim()) resultValue = null;
+            else if (!isName(resultValue)) throw new HttpException('Invalid fristName/lastName', HttpStatus.BAD_REQUEST);
+          } else if (resultValue !== null) return collection;
+
+          collection[key] = resultValue;
         }
-        collection[key] = resultValue;
-      }
-      return collection;
-    }, Promise.resolve({}));
+        return collection;
+      }, Promise.resolve({}));
 
     await this.userRepository.update(values, { where: { id } });
     return id;
