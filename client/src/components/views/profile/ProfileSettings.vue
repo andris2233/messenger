@@ -1,5 +1,5 @@
 <template>
-  <form class="form-profile-settings">
+  <form class="form-profile-settings" @submit.prevent>
     <VInput
       v-model:value="userData.email"
       label="Email"
@@ -20,38 +20,106 @@
       label="Surname"
     />
 
+    <VCheckbox v-model:checked="userData.isPrivate">Private profile</VCheckbox>
+
+    <VCheckbox v-model:checked="showPassword">Change password</VCheckbox>
+
     <VInput
-      label="Password"
+      v-if="showPassword"
+      v-model:value="userPasswords.oldPassword"
+      label="Old password"
       type="password"
     />
+
+    <VInput
+      v-if="showPassword"
+      v-model:value="userPasswords.newPassword"
+      label="New password"
+      type="password"
+    />
+
+    <VButton
+      type="submit"
+      :disabled="!hasChanges"
+      @click="updateProfile"
+    >
+      Save changes
+    </VButton>
   </form>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, WritableComputedRef, ref, PropType } from 'vue';
+import { defineComponent, computed, ref, watch, Ref, PropType, toRef, reactive } from 'vue';
+import cloneDeep from 'lodash/cloneDeep';
+import isEqual from 'lodash/isEqual';
 import VInput from '@/components/common/VInput.vue';
+import VCheckbox from '@/components/common/VCheckbox.vue';
+import VButton from '@/components/common/VButton.vue';
 import { IUserProfile } from '@/models/user';
+import { userService } from '@/api/user.service';
 
 export default defineComponent({
   name: 'ProfileSettings',
 
-  components: { VInput },
-
-  props: {
-    value: { type: Object as PropType<IUserProfile>, default: () => ({}) },
+  components: {
+    VButton,
+    VCheckbox,
+    VInput,
   },
 
-  emits: ['update:value'],
+  props: {
+    user: { type: Object as PropType<IUserProfile>, default: () => ({}) },
+  },
 
-  setup(props) {
-    const user = ref({});
+  emits: ['update:user'],
 
-    const userData: WritableComputedRef<IUserProfile> = computed({
-      get: () => JSON.parse(JSON.stringify(props.value)),
-      set: (v: any) => { user.value = v; },
+  setup(props, { emit }) {
+    const user = toRef(props, 'user');
+    const userData: Ref<IUserProfile> = ref({} as IUserProfile);
+    const showPassword = ref(false);
+    const userPasswords = reactive({
+      oldPassword: '',
+      newPassword: '',
     });
 
-    return { userData };
+    watch(user, (nv: IUserProfile) => {
+      userData.value = cloneDeep(nv);
+    }, { deep: true });
+
+    const isPasswordUpdated = computed(() => !!userPasswords.oldPassword && !!userPasswords.newPassword);
+    const isProfileUpdated = computed(() => !isEqual(userData.value, cloneDeep(props.user)));
+    const hasChanges = computed(() => isProfileUpdated.value || isPasswordUpdated.value);
+
+    const updateProfile = async () => {
+      try {
+        if (isProfileUpdated.value) {
+          const changedUserData = Object.keys(userData.value).filter((key) => (
+            userData.value[key as keyof IUserProfile] !== props.user[key as keyof IUserProfile]))
+            .reduce((keys, key) => ({
+              ...keys,
+              [key]: userData.value[key as keyof IUserProfile],
+            }), {});
+
+          await userService.updateUser(changedUserData);
+
+          emit('update:user', userData.value);
+
+          userData.value = cloneDeep(userData.value);
+        }
+
+        if (isPasswordUpdated.value) {
+          await userService.updatePassword(userPasswords);
+
+          userPasswords.oldPassword = '';
+          userPasswords.newPassword = '';
+        }
+      }
+      catch (e) {
+        console.log(e);
+      }
+    };
+
+    return { userData, updateProfile, hasChanges, userPasswords, showPassword };
   },
 });
 </script>
@@ -60,6 +128,6 @@ export default defineComponent({
 .form-profile-settings {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
 }
 </style>

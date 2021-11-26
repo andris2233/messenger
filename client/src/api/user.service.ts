@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios';
+import { IUserPatch, IUserPatchPassword } from 'common/model/user';
 import { request } from '@/api/http';
 
 export const userService = {
@@ -12,5 +13,13 @@ export const userService = {
 
   getProfileData: () => request()
     .get('user/me')
+    .then((res: AxiosResponse) => res.data),
+
+  updateUser: (userData: IUserPatch) => request()
+    .patch('user', userData)
+    .then((res: AxiosResponse) => res.data),
+
+  updatePassword: (passwords: IUserPatchPassword) => request()
+    .patch('user/password', passwords)
     .then((res: AxiosResponse) => res.data),
 };
